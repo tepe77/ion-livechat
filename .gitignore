@@ -76,3 +76,5 @@ infrastructure/nginx/logs/
 09_DEVOPS_DEPLOYMENT_SPEC.md
 10_ANTIGRAVITY_EXECUTION_SPEC.md
 11_TESTING_QA_SPEC.md
+
+skills-lock.json
