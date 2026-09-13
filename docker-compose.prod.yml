@@ -1,0 +1,16 @@
+services:
+  api:
+    restart: always
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      RUN_MIGRATIONS: "true"
+      RUN_SEEDERS: "false"
+
+  web:
+    restart: always
+    environment:
+      NODE_ENV: production
+
+  nginx:
+    restart: always

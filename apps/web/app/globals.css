@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --brand-primary: #023E8A;
+    --brand-primary-hover: #034A9B;
+    --brand-primary-active: #0757AE;
+    --brand-primary-soft: #DBEAFE;
+    --brand-primary-surface: #EFF6FF;
+
+    --bg-app: #F8FAFC;
+    --surface-card: #FFFFFF;
+    --border-subtle: #E2E8F0;
+    --border-strong: #CBD5E1;
+
+    --text-primary: #0F172A;
+    --text-secondary: #4B5563;
+    --text-muted: #64748B;
+
+    --status-online: #15803D;
+    --status-online-bg: #DCFCE7;
+    --status-away: #B45309;
+    --status-away-bg: #FEF3C7;
+    --status-offline: #64748B;
+    --status-offline-bg: #F1F5F9;
+    --status-error: #B91C1C;
+    --status-error-bg: #FEE2E2;
+  }
+
+  body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Utilities */
+.chat-scroll-container {
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Custom subtle scrollbar */
+.chat-scroll-container::-webkit-scrollbar {
+  width: 5px;
+}
+.chat-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-scroll-container::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}

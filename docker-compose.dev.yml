@@ -1,0 +1,22 @@
+services:
+  api:
+    volumes:
+      - ./apps/api:/var/www/html
+      - storage_data:/var/www/html/storage/app/public
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      RUN_MIGRATIONS: "true"
+      RUN_SEEDERS: "true"
+
+  web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/web/Dockerfile
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      NODE_ENV: development
+    command: ["npm", "run", "dev"]

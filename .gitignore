@@ -1,0 +1,78 @@
+# ==========================================
+# 1. Global & OS Files
+# ==========================================
+.DS_Store
+Thumbs.db
+*~
+*.log
+.vscode/
+.idea/
+.agents/
+
+# ==========================================
+# 2. Node & Monorepo Dependencies
+# ==========================================
+# Mengabaikan node_modules di root maupun di sub-direktori
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+.pnpm-debug.log
+
+# ==========================================
+# 3. Root Environment
+# ==========================================
+.env
+.env.local
+.env.*.local
+!.env.example
+docker-compose.override.yml
+
+# ==========================================
+# 4. Backend: Laravel (apps/api)
+# ==========================================
+apps/api/vendor/
+apps/api/public/build/
+apps/api/public/hot
+apps/api/public/storage
+apps/api/storage/*.key
+apps/api/storage/logs/
+apps/api/storage/framework/cache/
+apps/api/storage/framework/sessions/
+apps/api/storage/framework/views/
+apps/api/bootstrap/cache/
+apps/api/.phpunit.result.cache
+apps/api/phpunit.xml
+
+# ==========================================
+# 5. Frontend: Next.js (apps/web)
+# ==========================================
+apps/web/.next/
+apps/web/out/
+apps/web/build/
+apps/web/next-env.d.ts
+apps/web/.vercel/
+apps/web/.tsbuildinfo
+
+# ==========================================
+# 6. Infrastructure & Docker
+# ==========================================
+# Mengabaikan data volume database (PostgreSQL/Redis) agar data lokal tidak ter-commit
+infrastructure/docker/volumes/
+infrastructure/docker/data/
+infrastructure/nginx/logs/
+
+# ==========================================
+# 7. File PRD
+# ==========================================
+01_PRD.md
+02_ARCHITECTURE.md
+03_DATABASE_ERD.md
+04_API_SPEC.md
+05_WEBSOCKET_SPEC.md
+06_BACKEND_IMPLEMENTATION_SPEC.md
+07_UI_UX_SPEC.md
+08_FRONTEND_IMPLEMENTATION_SPEC.md
+09_DEVOPS_DEPLOYMENT_SPEC.md
+10_ANTIGRAVITY_EXECUTION_SPEC.md
+11_TESTING_QA_SPEC.md
