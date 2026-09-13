@@ -1,4 +1,4 @@
-# ION Live Chat — Realtime ISP Customer Support Platform
+# ION Live Chat — Realtime ION Broadband Customer Support Platform
 
 [![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel)](https://laravel.com)
 [![Next.js](https://img.shields.io/badge/Next.js-16.x-000000?style=for-the-badge&logo=next.js)](https://nextjs.org)
@@ -133,17 +133,6 @@ make test-frontend
 
 ```
 .
-├── 01_PRD.md                             # Product Requirements Document
-├── 02_ARCHITECTURE.md                    # System & Component Architecture
-├── 03_DATABASE_ERD.md                    # Database Schema & Relational Design
-├── 04_API_SPEC.md                        # REST API Specifications
-├── 05_WEBSOCKET_SPEC.md                  # Real-Time WebSocket Specifications
-├── 06_BACKEND_IMPLEMENTATION_SPEC.md     # Backend Architecture Details
-├── 07_UI_UX_SPEC.md                      # UI/UX Specifications & Tokens
-├── 08_FRONTEND_IMPLEMENTATION_SPEC.md    # Frontend Component Specs
-├── 09_TESTING_QA_SPEC.md                 # QA Protocols & Concurrency Test Scenarios
-├── 10_DEVOPS_DEPLOYMENT_SPEC.md          # Docker, Nginx & Deployment Specs
-├── 11_ANTIGRAVITY_EXECUTION_SPEC.md      # Master Implementation Roadmap
 │
 ├── apps/
 │   ├── api/                              # Laravel 12 Backend API
