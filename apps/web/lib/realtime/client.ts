@@ -93,6 +93,8 @@ export function getEcho(): Echo<"reverb"> | null {
       wssPort: isTls ? port : 443,
       forceTLS: isTls,
       enabledTransports: ["ws", "wss"],
+      activityTimeout: 20000,
+      pongTimeout: 10000,
       authorizer: (channel: any) => ({
         authorize: (socketId: string, callback: (error: any, authData: any) => void) => {
           const token = getAuthToken();
@@ -157,17 +159,56 @@ export function getEcho(): Echo<"reverb"> | null {
       });
       pusher.connection.bind("disconnected", () => {
         useRealtimeStore.getState().setStatus("disconnected");
+        // Quick auto-reconnect on unexpected drop
+        setTimeout(() => {
+          if (pusher.connection.state === "disconnected") {
+            pusher.connect();
+          }
+        }, 1500);
       });
       pusher.connection.bind("unavailable", () => {
         useRealtimeStore.getState().setStatus("unavailable");
+        // Retry connect when connection is unavailable
+        setTimeout(() => {
+          if (pusher.connection.state === "unavailable") {
+            pusher.connect();
+          }
+        }, 3000);
       });
       pusher.connection.bind("error", (err: any) => {
+        console.warn("Realtime WebSocket error:", err);
         useRealtimeStore.getState().setError(err?.error?.data?.message || err?.message || "Koneksi realtime terputus");
+        setTimeout(() => {
+          if (pusher.connection.state !== "connected" && pusher.connection.state !== "connecting") {
+            pusher.connect();
+          }
+        }, 2000);
       });
     }
   }
 
   return echoInstance;
+}
+
+// Auto-reconnect when browser tab regains focus or internet reconnects
+if (typeof window !== "undefined" && !(window as any).__ion_realtime_listeners_bound) {
+  (window as any).__ion_realtime_listeners_bound = true;
+
+  window.addEventListener("online", () => {
+    const pusher = (echoInstance?.connector as any)?.pusher;
+    if (pusher?.connection && (pusher.connection.state === "disconnected" || pusher.connection.state === "unavailable")) {
+      pusher.connect();
+    }
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      const pusher = (echoInstance?.connector as any)?.pusher;
+      if (pusher?.connection && (pusher.connection.state === "disconnected" || pusher.connection.state === "unavailable")) {
+        pusher.connect();
+      }
+    }
+  });
 }
 
 export function disconnectEcho(): void {
