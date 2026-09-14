@@ -47,10 +47,15 @@ RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoload
 # Copy full application code
 COPY apps/api .
 
-# Run package discovery and set directory permissions
-RUN composer dump-autoload --optimize \
-    && mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
-    && chmod -R 775 storage bootstrap/cache
+# Ensure storage and bootstrap/cache directories exist with proper permissions BEFORE package discovery
+RUN mkdir -p \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache \
+    && composer dump-autoload --optimize
 
 # Copy entrypoint
 COPY infrastructure/docker/api/entrypoint.sh /usr/local/bin/entrypoint.sh

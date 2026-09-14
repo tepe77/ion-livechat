@@ -36,11 +36,16 @@ apps/api/public/build/
 apps/api/public/hot
 apps/api/public/storage
 apps/api/storage/*.key
-apps/api/storage/logs/
-apps/api/storage/framework/cache/
-apps/api/storage/framework/sessions/
-apps/api/storage/framework/views/
-apps/api/bootstrap/cache/
+apps/api/storage/logs/*
+!apps/api/storage/logs/.gitignore
+apps/api/storage/framework/cache/*
+!apps/api/storage/framework/cache/.gitignore
+apps/api/storage/framework/sessions/*
+!apps/api/storage/framework/sessions/.gitignore
+apps/api/storage/framework/views/*
+!apps/api/storage/framework/views/.gitignore
+apps/api/bootstrap/cache/*
+!apps/api/bootstrap/cache/.gitignore
 apps/api/.phpunit.result.cache
 apps/api/phpunit.xml
 
