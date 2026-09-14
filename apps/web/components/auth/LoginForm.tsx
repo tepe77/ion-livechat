@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "../../lib/api/auth";
+import { API_BASE_URL } from "../../lib/api/client";
 import { useAuthStore } from "../../stores/authStore";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -113,7 +114,7 @@ export function LoginForm() {
 
           <div className="grid grid-cols-2 gap-3">
             <a
-              href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1"}/auth/oauth/google`}
+              href={`${API_BASE_URL}/auth/oauth/google`}
               className="flex items-center justify-center gap-2 h-10 rounded-lg border border-slate-300 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24">
@@ -138,7 +139,7 @@ export function LoginForm() {
             </a>
 
             <a
-              href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1"}/auth/oauth/facebook`}
+              href={`${API_BASE_URL}/auth/oauth/facebook`}
               className="flex items-center justify-center gap-2 h-10 rounded-lg border border-slate-300 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
             >
               <svg className="h-4 w-4 fill-[#1877F2]" viewBox="0 0 24 24">

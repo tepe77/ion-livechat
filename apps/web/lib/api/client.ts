@@ -1,4 +1,15 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+export const API_BASE_URL = (() => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== "undefined") {
+    // If accessing from a remote domain and envUrl points to localhost or is missing, use relative /api/v1
+    if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+      if (!envUrl || envUrl.includes("localhost") || envUrl.includes("127.0.0.1")) {
+        return "/api/v1";
+      }
+    }
+  }
+  return envUrl || "http://localhost:8000/api/v1";
+})();
 
 export class ApiError extends Error {
   constructor(

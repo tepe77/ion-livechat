@@ -46,14 +46,24 @@ export function formatDuration(seconds: number): string {
 export function getAttachmentUrl(url?: string | null): string {
   if (!url) return "#";
 
-  // Handle local development port mismatch if url is missing :8000
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
-  if (apiUrl.includes(":8000") && url.startsWith("http://localhost/storage")) {
-    return url.replace("http://localhost/storage", "http://localhost:8000/storage");
+  // Handle local development or production domain translation for localhost storage paths
+  if (url.startsWith("http://localhost/storage")) {
+    if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+      // On production, route storage through current domain origin
+      return url.replace("http://localhost", window.location.origin);
+    }
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+    if (apiUrl.includes(":8000")) {
+      return url.replace("http://localhost/storage", "http://localhost:8000/storage");
+    }
   }
 
   if (url.startsWith("/storage")) {
-    const base = apiUrl ? apiUrl.replace(/\/api\/.*$/, "") : "http://localhost:8000";
+    if (typeof window !== "undefined") {
+      return `${window.location.origin}${url}`;
+    }
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const base = apiUrl.replace(/\/api\/.*$/, "");
     return `${base}${url}`;
   }
 

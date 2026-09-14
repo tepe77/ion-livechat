@@ -175,12 +175,18 @@ services:
     build:
       context: .
       dockerfile: infrastructure/docker/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api/v1}
+        NEXT_PUBLIC_REVERB_KEY: ${REVERB_APP_KEY:-ionlivechatkey}
+        NEXT_PUBLIC_REVERB_HOST: ${PUBLIC_HOST:-livechat.zayra.web.id}
+        NEXT_PUBLIC_REVERB_PORT: ${PUBLIC_PORT:-443}
+        NEXT_PUBLIC_REVERB_SCHEME: ${PUBLIC_SCHEME:-https}
     container_name: ion_web
     restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 3000
-      NEXT_PUBLIC_API_URL: /api/v1
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api/v1}
       NEXT_PUBLIC_REVERB_KEY: ${REVERB_APP_KEY:-ionlivechatkey}
       NEXT_PUBLIC_REVERB_HOST: ${PUBLIC_HOST:-livechat.zayra.web.id}
       NEXT_PUBLIC_REVERB_PORT: ${PUBLIC_PORT:-443}
