@@ -9,6 +9,7 @@ import { AgentMonitoringTable } from "../../../components/manager/AgentMonitorin
 import { ConversationMonitor } from "../../../components/manager/ConversationMonitor";
 import { ManagerProfileDropdown } from "../../../components/manager/ManagerProfileDropdown";
 import { Button } from "../../../components/ui/Button";
+import { BrandLogo } from "../../../components/ui/BrandLogo";
 import {
   Activity,
   Users,
@@ -40,7 +41,7 @@ export default function ManagerDashboardPage() {
   if (!isInitialized || !user) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#023E8A] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin" />
       </div>
     );
   }
@@ -49,19 +50,7 @@ export default function ManagerDashboardPage() {
     <div className="min-h-screen bg-slate-100 flex flex-col">
       {/* Manager Header */}
       <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-[#023E8A] text-white flex items-center justify-center shadow-xs">
-            <Activity className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-base font-bold text-slate-900 leading-tight">
-              Portal Supervisor & SPV Live Chat
-            </div>
-            <div className="text-xs text-slate-500">
-              Monitoring Real-Time Operasional Layanan Pelanggan ION
-            </div>
-          </div>
-        </div>
+        <BrandLogo subtitle="Portal Supervisor & Monitoring Operasional" />
 
         <div className="flex items-center gap-3">
           <Link href="/agent/workspace" target="_blank">
@@ -95,7 +84,7 @@ export default function ManagerDashboardPage() {
             onClick={() => setActiveTab("overview")}
             className={`py-3 px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-2 transition-colors ${
               activeTab === "overview"
-                ? "border-[#023E8A] text-[#023E8A]"
+                ? "border-[#1E3785] text-[#1E3785]"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -107,7 +96,7 @@ export default function ManagerDashboardPage() {
             onClick={() => setActiveTab("agents")}
             className={`py-3 px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-2 transition-colors ${
               activeTab === "agents"
-                ? "border-[#023E8A] text-[#023E8A]"
+                ? "border-[#1E3785] text-[#1E3785]"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -119,7 +108,7 @@ export default function ManagerDashboardPage() {
             onClick={() => setActiveTab("conversations")}
             className={`py-3 px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-2 transition-colors ${
               activeTab === "conversations"
-                ? "border-[#023E8A] text-[#023E8A]"
+                ? "border-[#1E3785] text-[#1E3785]"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >

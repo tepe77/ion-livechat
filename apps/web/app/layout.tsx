@@ -3,8 +3,8 @@ import "./globals.css";
 import { AuthInitializer } from "../components/auth/AuthInitializer";
 
 export const metadata: Metadata = {
-  title: "ION Live Chat - ISP Customer Service & Technical Support",
-  description: "Realtime customer support live chat system for ION ISP customers, agents, managers, and administrators.",
+  title: "ION Broadband Livechat - ISP Customer Service & Technical Support",
+  description: "Sistem realtime customer support live chat ION Broadband untuk pelanggan, agen, supervisor, dan administrator.",
 };
 
 export default function RootLayout({

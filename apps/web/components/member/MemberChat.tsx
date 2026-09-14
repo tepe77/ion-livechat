@@ -351,7 +351,7 @@ export function MemberChat({
       <header className="flex items-center justify-between px-5 py-3.5 bg-white border-b border-slate-200 shrink-0 z-10">
         <div className="flex items-center gap-3.5">
           <div className="relative">
-            <div className="flex items-center justify-center h-11 w-11 rounded-2xl bg-gradient-to-tr from-[#023E8A] to-blue-600 text-white font-semibold shadow-xs">
+            <div className="flex items-center justify-center h-11 w-11 rounded-2xl bg-gradient-to-tr from-[#1E3785] to-blue-700 text-white font-semibold shadow-xs">
               <Headphones className="h-6 w-6" />
             </div>
             {!isClosed && (
@@ -363,7 +363,7 @@ export function MemberChat({
               <h1 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
                 {conversation.agent?.name || "Customer Service ION"}
               </h1>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-[#023E8A] border border-blue-100 hidden sm:inline">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-[#1E3785] border border-blue-100 hidden sm:inline">
                 Dukungan Teknis ISP
               </span>
             </div>
@@ -426,7 +426,7 @@ export function MemberChat({
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-slate-50/60">
         {/* Welcome Card Banner */}
         <div className="max-w-xl mx-auto p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs text-center space-y-2 mb-4">
-          <div className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-blue-50 text-[#023E8A]">
+          <div className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-blue-50 text-[#1E3785]">
             <ShieldCheck className="h-5 w-5" />
           </div>
           <h2 className="text-xs sm:text-sm font-bold text-slate-900">
@@ -448,28 +448,28 @@ export function MemberChat({
               <button
                 type="button"
                 onClick={() => handleQuickPrompt("Halo tim teknis, koneksi internet saya terasa lambat.")}
-                className="text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#023E8A] hover:bg-blue-50/50 text-xs text-slate-700 transition-all cursor-pointer"
+                className="text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#1E3785] hover:bg-blue-50/50 text-xs text-slate-700 transition-all cursor-pointer"
               >
                 ⚡ Internet terasa lambat
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickPrompt("Lampu LOS pada modem ONT saya berkedip warna merah.")}
-                className="text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#023E8A] hover:bg-blue-50/50 text-xs text-slate-700 transition-all cursor-pointer"
+                className="text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#1E3785] hover:bg-blue-50/50 text-xs text-slate-700 transition-all cursor-pointer"
               >
                 🔴 Lampu LOS merah berkedip
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickPrompt("Mohon bantuan untuk reset atau ganti kata sandi WiFi.")}
-                className="text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#023E8A] hover:bg-blue-50/50 text-xs text-slate-700 transition-all cursor-pointer"
+                className="text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#1E3785] hover:bg-blue-50/50 text-xs text-slate-700 transition-all cursor-pointer"
               >
                 🔑 Cara ganti password WiFi
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickPrompt("Bagaimana cara mengecek status tagihan paket bulan ini?")}
-                className="text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#023E8A] hover:bg-blue-50/50 text-xs text-slate-700 transition-all cursor-pointer"
+                className="text-left p-2.5 rounded-xl border border-slate-200 bg-white hover:border-[#1E3785] hover:bg-blue-50/50 text-xs text-slate-700 transition-all cursor-pointer"
               >
                 💳 Cek rincian tagihan
               </button>
@@ -496,7 +496,7 @@ export function MemberChat({
                 className={cn(
                   "max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed shadow-xs transition-shadow",
                   isMe
-                    ? "bg-[#023E8A] text-white rounded-br-xs font-normal"
+                    ? "bg-[#1E3785] text-white rounded-br-xs font-normal"
                     : "bg-white text-slate-800 border border-slate-200 rounded-bl-xs shadow-2xs"
                 )}
               >
@@ -599,9 +599,9 @@ export function MemberChat({
         {/* Realtime Agent Typing Indicator */}
         {isAgentTyping && (
           <div className="flex items-center gap-2 text-xs text-slate-500 bg-white border border-slate-200 rounded-full px-3.5 py-1.5 w-fit shadow-xs animate-pulse">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#023E8A] animate-bounce" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#023E8A] animate-bounce [animation-delay:0.2s]" />
-            <span className="h-1.5 w-1.5 rounded-full bg-[#023E8A] animate-bounce [animation-delay:0.4s]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#1E3785] animate-bounce" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#1E3785] animate-bounce [animation-delay:0.2s]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#1E3785] animate-bounce [animation-delay:0.4s]" />
             <span className="font-medium text-[11px] text-slate-600">
               {conversation.agent?.name || "Petugas CS"} sedang mengetik...
             </span>
@@ -620,7 +620,7 @@ export function MemberChat({
                 {previewUrl ? (
                   <img src={previewUrl} alt="Preview" className="h-full w-full object-cover" />
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center bg-blue-50 text-[#023E8A]">
+                  <div className="h-full w-full flex items-center justify-center bg-blue-50 text-[#1E3785]">
                     <ImageIcon className="h-4 w-4" />
                   </div>
                 )}
@@ -687,7 +687,7 @@ export function MemberChat({
                 size="sm"
                 onClick={handleStartNewChat}
                 isLoading={isStartingNew}
-                className="text-xs bg-[#023E8A] hover:bg-[#034A9B] font-semibold shadow-xs cursor-pointer"
+                className="text-xs bg-[#1E3785] hover:bg-[#162B6B] font-semibold shadow-xs cursor-pointer"
               >
                 Mulai Chat Baru
               </Button>
@@ -718,8 +718,8 @@ export function MemberChat({
                 size="icon"
                 onClick={() => setAttachmentMenuOpen((prev) => !prev)}
                 className={cn(
-                  "text-slate-500 hover:text-[#023E8A] hover:bg-blue-50 shrink-0 h-10 w-10 rounded-xl transition-all",
-                  attachmentMenuOpen && "bg-blue-100 text-[#023E8A] ring-2 ring-[#023E8A]/20"
+                  "text-slate-500 hover:text-[#1E3785] hover:bg-blue-50 shrink-0 h-10 w-10 rounded-xl transition-all",
+                  attachmentMenuOpen && "bg-blue-100 text-[#1E3785] ring-2 ring-[#1E3785]/20"
                 )}
                 title="Pilih lampiran foto atau video"
               >
@@ -742,11 +742,11 @@ export function MemberChat({
                       }}
                       className="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-left hover:bg-blue-50 transition-colors group cursor-pointer"
                     >
-                      <div className="h-8 w-8 rounded-lg bg-blue-100 text-[#023E8A] group-hover:bg-[#023E8A] group-hover:text-white flex items-center justify-center transition-colors shrink-0">
+                      <div className="h-8 w-8 rounded-lg bg-blue-100 text-[#1E3785] group-hover:bg-[#1E3785] group-hover:text-white flex items-center justify-center transition-colors shrink-0">
                         <ImageIcon className="h-4 w-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-semibold text-slate-800 group-hover:text-[#023E8A]">Foto / Gambar</div>
+                        <div className="text-xs font-semibold text-slate-800 group-hover:text-[#1E3785]">Foto / Gambar</div>
                         <div className="text-[10px] text-slate-400">JPG, PNG, WEBP (Maks. 1MB)</div>
                       </div>
                     </button>
@@ -777,7 +777,7 @@ export function MemberChat({
               value={inputContent}
               onChange={handleInputChange}
               placeholder="Tulis pesan atau keluhan Anda di sini..."
-              className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#023E8A] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#023E8A] transition-colors"
+              className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1E3785] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785] transition-colors"
             />
 
             <Button
@@ -786,7 +786,7 @@ export function MemberChat({
               size="icon"
               isLoading={isSending}
               disabled={!inputContent.trim() && !selectedFile}
-              className="rounded-xl h-10 w-10 shrink-0 bg-[#023E8A] hover:bg-[#034A9B] shadow-xs"
+              className="rounded-xl h-10 w-10 shrink-0 bg-[#1E3785] hover:bg-[#162B6B] shadow-xs"
               title="Kirim pesan"
             >
               <Send className="h-4 w-4" />

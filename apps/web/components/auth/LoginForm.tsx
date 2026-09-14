@@ -1,22 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "../../lib/api/auth";
 import { useAuthStore } from "../../stores/authStore";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Card } from "../ui/Card";
+import { BrandLogo } from "../ui/BrandLogo";
 import { Headphones, ShieldCheck, User, Users, Briefcase } from "lucide-react";
 
 export function LoginForm() {
   const router = useRouter();
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const { user, isInitialized, setAuth } = useAuthStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isInitialized && user) {
+      if (user.role === "superadmin") router.push("/admin/users");
+      else if (user.role === "manager") router.push("/manager/dashboard");
+      else if (user.role === "agent") router.push("/agent/workspace");
+      else router.push("/member");
+    }
+  }, [user, isInitialized, router]);
 
   const handleLogin = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -52,14 +62,14 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-[#023E8A] text-white shadow-md">
-          <Headphones className="h-6 w-6" />
+      <div className="flex flex-col items-center justify-center space-y-2 text-center">
+        <BrandLogo size="xl" showText={false} />
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">ION Broadband Livechat</h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Platform Layanan Pelanggan & Bantuan Teknis Terpadu
+          </p>
         </div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">ION Live Chat</h1>
-        <p className="text-xs text-slate-500">
-          Platform Layanan Pelanggan & Bantuan Teknis Terpadu
-        </p>
       </div>
 
       <Card className="p-6 border-slate-200 shadow-md">
@@ -139,11 +149,8 @@ export function LoginForm() {
           </div>
 
           <div className="text-center pt-2">
-            <p className="text-xs text-slate-500">
-              Belum punya akun?{" "}
-              <a href="/register" className="font-semibold text-[#023E8A] hover:underline">
-                Daftar sekarang
-              </a>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Pelanggan ION dapat langsung masuk secara instan menggunakan tombol <strong>Google</strong> atau <strong>Facebook</strong> di atas.
             </p>
           </div>
         </form>
@@ -161,7 +168,7 @@ export function LoginForm() {
             onClick={() => quickFill("member1@ion.test")}
             className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800 text-left"
           >
-            <User className="h-4 w-4 text-[#023E8A]" />
+            <User className="h-4 w-4 text-[#1E3785]" />
             <div className="truncate">
               <p className="font-semibold truncate">Member Budi</p>
               <p className="text-[10px] text-slate-400">Customer</p>

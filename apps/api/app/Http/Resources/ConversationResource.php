@@ -33,6 +33,10 @@ class ConversationResource extends JsonResource
             }),
         ];
 
+        if (isset($this->unread_messages_count)) {
+            $data['unread_count'] = (int) $this->unread_messages_count;
+        }
+
         // Staff-specific metadata
         if (!$isMember) {
             $data['member_id'] = $this->member_id;

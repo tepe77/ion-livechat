@@ -9,6 +9,8 @@ import { Button } from "../../components/ui/Button";
 import { Badge } from "../../components/ui/Badge";
 import { Dialog } from "../../components/ui/Dialog";
 import { MemberProfileDropdown } from "../../components/member/MemberProfileDropdown";
+import { MemberBottomNav } from "../../components/member/MemberBottomNav";
+import { BrandLogo } from "../../components/ui/BrandLogo";
 import { formatDateTime, formatDate, formatTime } from "../../lib/utils";
 import type { Conversation } from "@ion/types";
 import {
@@ -113,8 +115,8 @@ export default function MemberOnboardingPage() {
   if (!isInitialized || (isLoading && conversations.length === 0)) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <Loader2 className="h-8 w-8 text-[#023E8A] animate-spin mb-3" />
-        <p className="text-sm font-medium text-slate-600">Memuat portal pelanggan ION...</p>
+        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin mb-3" />
+        <p className="text-sm font-medium text-slate-600">Memuat portal ION Broadband Livechat...</p>
       </div>
     );
   }
@@ -125,15 +127,7 @@ export default function MemberOnboardingPage() {
     <div className="min-h-screen bg-slate-100 flex flex-col">
       {/* Top Navbar */}
       <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2.5 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-[#023E8A] text-white flex items-center justify-center shadow-xs">
-            <Headphones className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-slate-900 leading-tight">ION Customer Portal</div>
-            <div className="text-[11px] text-slate-500">Layanan Pelanggan & Bantuan Teknis ISP</div>
-          </div>
-        </div>
+        <BrandLogo subtitle="Portal Pelanggan & Bantuan Teknis" />
 
         <div className="flex items-center gap-3">
           <Link href="/member/history">
@@ -150,9 +144,9 @@ export default function MemberOnboardingPage() {
       </header>
 
       {/* Main Content Body */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-24 md:pb-8">
         {/* Welcome Greeting Banner */}
-        <section className="bg-gradient-to-r from-[#023E8A] via-blue-800 to-blue-900 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+        <section className="bg-gradient-to-r from-[#1E3785] via-blue-900 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
           <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 rounded-full bg-white/5 blur-2xl pointer-events-none" />
           <div className="relative z-10 max-w-2xl space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-blue-100">
@@ -163,7 +157,7 @@ export default function MemberOnboardingPage() {
               Halo, {user?.name || "Pelanggan"}! 👋
             </h1>
             <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
-              Selamat datang di Pusat Dukungan Pelanggan ION Live Chat. Butuh panduan teknis,
+              Selamat datang di Pusat Dukungan Pelanggan ION Broadband Livechat. Butuh panduan teknis,
               pemeriksaan router ONT, atau informasi tagihan? Tim kami siap melayani Anda secara
               realtime.
             </p>
@@ -174,7 +168,7 @@ export default function MemberOnboardingPage() {
         <section className="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-blue-50 text-[#023E8A] flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-xl bg-blue-50 text-[#1E3785] flex items-center justify-center shrink-0">
                 <Wifi className="h-5 w-5" />
               </div>
               <div>
@@ -227,8 +221,8 @@ export default function MemberOnboardingPage() {
             onClick={handleStartChat}
             className={`group relative rounded-3xl p-6 border transition-all cursor-pointer shadow-sm flex flex-col justify-between ${
               activeConv
-                ? "bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/40 border-blue-300 hover:shadow-md hover:border-[#023E8A]"
-                : "bg-white border-slate-200 hover:border-[#023E8A]/50 hover:shadow-md"
+                ? "bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/40 border-blue-300 hover:shadow-md hover:border-[#1E3785]"
+                : "bg-white border-slate-200 hover:border-[#1E3785]/50 hover:shadow-md"
             }`}
           >
             <div>
@@ -236,8 +230,8 @@ export default function MemberOnboardingPage() {
                 <div
                   className={`h-12 w-12 rounded-2xl flex items-center justify-center shadow-xs ${
                     activeConv
-                      ? "bg-[#023E8A] text-white"
-                      : "bg-blue-50 text-[#023E8A] group-hover:bg-[#023E8A] group-hover:text-white transition-colors"
+                      ? "bg-[#1E3785] text-white"
+                      : "bg-blue-50 text-[#1E3785] group-hover:bg-[#1E3785] group-hover:text-white transition-colors"
                   }`}
                 >
                   <MessageSquare className="h-6 w-6" />
@@ -269,7 +263,7 @@ export default function MemberOnboardingPage() {
             <div className="pt-6">
               <Button
                 variant="primary"
-                className="w-full justify-center bg-[#023E8A] hover:bg-[#034A9B] gap-2 shadow-xs"
+                className="w-full justify-center bg-[#1E3785] hover:bg-[#162B6B] gap-2 shadow-xs"
                 isLoading={isStartingChat}
               >
                 <span>{activeConv ? "Masuk ke Ruang Chat Aktif" : "Mulai Percakapan Sekarang"}</span>
@@ -320,8 +314,8 @@ export default function MemberOnboardingPage() {
                 <p className="text-xs text-slate-500">Transkrip bantuan teknis yang telah selesai</p>
               </div>
               <Link href="/member/history">
-                <Button variant="ghost" size="sm" className="text-xs text-[#023E8A] gap-1">
-                  Lihat Semua
+                <Button variant="ghost" size="sm" className="text-xs text-[#1E3785] gap-1">
+                  <span>Lihat Semua Riwayat</span>
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
               </Link>
@@ -403,7 +397,7 @@ export default function MemberOnboardingPage() {
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-[#023E8A] to-blue-900 rounded-2xl p-5 text-white space-y-2">
+          <div className="bg-gradient-to-br from-[#1E3785] to-blue-950 rounded-2xl p-5 text-white space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-blue-100">
               <PhoneCall className="h-4 w-4 text-blue-300" />
               Hotline Darurat NOC 24 Jam
@@ -456,6 +450,9 @@ export default function MemberOnboardingPage() {
           </div>
         </div>
       </Dialog>
+
+      {/* Mobile Responsive Bottom Navigation Bar */}
+      <MemberBottomNav />
     </div>
   );
 }

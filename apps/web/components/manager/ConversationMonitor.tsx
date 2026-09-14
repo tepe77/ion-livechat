@@ -40,7 +40,7 @@ export function ConversationMonitor() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#023E8A]"
+            className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
           >
             <option value="">Semua Status</option>
             <option value="waiting">Menunggu Antrean</option>

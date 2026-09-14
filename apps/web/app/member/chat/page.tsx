@@ -8,6 +8,8 @@ import { startConversation, getConversations } from "../../../lib/api/conversati
 import { MemberChat } from "../../../components/member/MemberChat";
 import { Button } from "../../../components/ui/Button";
 import { MemberProfileDropdown } from "../../../components/member/MemberProfileDropdown";
+import { MemberBottomNav } from "../../../components/member/MemberBottomNav";
+import { BrandLogo } from "../../../components/ui/BrandLogo";
 import type { Conversation } from "@ion/types";
 import {
   Headphones,
@@ -88,8 +90,8 @@ export default function MemberChatPage() {
   if (!isInitialized || (isLoading && !conversation)) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <Loader2 className="h-8 w-8 text-[#023E8A] animate-spin mb-3" />
-        <p className="text-sm font-medium text-slate-600">Menghubungkan ke layanan ION Live Chat...</p>
+        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin mb-3" />
+        <p className="text-sm font-medium text-slate-600">Menghubungkan ke layanan ION Broadband Livechat...</p>
       </div>
     );
   }
@@ -113,13 +115,7 @@ export default function MemberChatPage() {
 
           <div className="h-4 w-px bg-slate-200" />
 
-          <div className="h-9 w-9 rounded-xl bg-[#023E8A] text-white flex items-center justify-center shadow-xs">
-            <Headphones className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-slate-900 leading-tight">ION Customer Support</div>
-            <div className="text-[11px] text-slate-500">Layanan Bantuan Teknis & Pelanggan ISP</div>
-          </div>
+          <BrandLogo subtitle="Layanan Bantuan Teknis & Pelanggan ISP" />
         </div>
 
         <div className="flex items-center gap-3">
@@ -150,7 +146,7 @@ export default function MemberChatPage() {
             </Button>
           </div>
         ) : conversation ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-[calc(100dvh-5.5rem)]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-[calc(100dvh-9.5rem)] md:h-[calc(100dvh-5.5rem)] pb-16 md:pb-0">
             {/* Primary Chat Column */}
             <div className="col-span-12 lg:col-span-8 h-full flex flex-col">
               <MemberChat
@@ -165,7 +161,7 @@ export default function MemberChatPage() {
               <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900 flex items-center gap-2">
-                    <Wifi className="h-4 w-4 text-[#023E8A]" />
+                    <Wifi className="h-4 w-4 text-[#1E3785]" />
                     Paket Layanan Aktif
                   </span>
                   <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -174,18 +170,14 @@ export default function MemberChatPage() {
                   </span>
                 </div>
 
-                <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80 space-y-2">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-500">Pelanggan:</span>
-                    <span className="font-semibold text-slate-800">{user?.name}</span>
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-2 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Nama Paket:</span>
+                    <span className="font-bold text-[#1E3785]">ION Fiber 100 Mbps</span>
                   </div>
                   <div className="flex justify-between items-center text-xs">
                     <span className="text-slate-500">ID Pelanggan:</span>
                     <span className="font-mono font-medium text-slate-700">ION-089124</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-500">Paket:</span>
-                    <span className="font-bold text-[#023E8A]">ION Fiber 100 Mbps</span>
                   </div>
                 </div>
 
@@ -210,7 +202,7 @@ export default function MemberChatPage() {
 
                 <div className="space-y-2.5 text-xs text-slate-600">
                   <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex gap-2.5">
-                    <div className="h-5 w-5 rounded-full bg-blue-100 text-[#023E8A] font-bold text-[10px] flex items-center justify-center shrink-0">
+                    <div className="h-5 w-5 rounded-full bg-blue-100 text-[#1E3785] font-bold text-[10px] flex items-center justify-center shrink-0">
                       1
                     </div>
                     <div>
@@ -222,7 +214,7 @@ export default function MemberChatPage() {
                   </div>
 
                   <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex gap-2.5">
-                    <div className="h-5 w-5 rounded-full bg-blue-100 text-[#023E8A] font-bold text-[10px] flex items-center justify-center shrink-0">
+                    <div className="h-5 w-5 rounded-full bg-blue-100 text-[#1E3785] font-bold text-[10px] flex items-center justify-center shrink-0">
                       2
                     </div>
                     <div>
@@ -233,7 +225,7 @@ export default function MemberChatPage() {
                   </div>
 
                   <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex gap-2.5">
-                    <div className="h-5 w-5 rounded-full bg-blue-100 text-[#023E8A] font-bold text-[10px] flex items-center justify-center shrink-0">
+                    <div className="h-5 w-5 rounded-full bg-blue-100 text-[#1E3785] font-bold text-[10px] flex items-center justify-center shrink-0">
                       3
                     </div>
                     <div>
@@ -246,7 +238,7 @@ export default function MemberChatPage() {
               </div>
 
               {/* NOC Contact Card */}
-              <div className="bg-gradient-to-br from-[#023E8A] to-blue-900 rounded-2xl p-4 text-white shadow-xs space-y-2">
+              <div className="bg-gradient-to-br from-[#1E3785] to-blue-950 rounded-2xl p-4 text-white shadow-xs space-y-2">
                 <div className="flex items-center gap-2">
                   <PhoneCall className="h-4 w-4 text-blue-200" />
                   <span className="text-xs font-bold">Pusat Bantuan Darurat 24 Jam</span>
@@ -262,6 +254,9 @@ export default function MemberChatPage() {
           </div>
         ) : null}
       </main>
+
+      {/* Mobile Responsive Bottom Navigation Bar */}
+      <MemberBottomNav />
     </div>
   );
 }

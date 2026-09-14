@@ -1,8 +1,8 @@
 import { LoginForm } from "../../../components/auth/LoginForm";
 
 export const metadata = {
-  title: "Masuk - ION Live Chat",
-  description: "Masuk ke portal ION Live Chat untuk Member, Agent, Supervisor, dan Admin.",
+  title: "Masuk - ION Broadband Livechat",
+  description: "Masuk ke portal ION Broadband Livechat untuk Member, Agent, Supervisor, dan Admin.",
 };
 
 export default function LoginPage() {

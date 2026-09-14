@@ -155,7 +155,9 @@ export function AgentWorkspace() {
       setUnreadCounts((prev) => {
         const next = { ...prev };
         res.data.forEach((c) => {
-          if (
+          if (c.unread_count !== undefined) {
+            next[c.id] = c.unread_count;
+          } else if (
             c.latest_message &&
             user &&
             c.latest_message.sender_id !== user.id &&
@@ -517,23 +519,6 @@ export function AgentWorkspace() {
     }
   };
 
-  const selectedConversationIsCsReplied = Boolean(
-    selectedConversation?.first_response_at ||
-    (selectedConversation?.latest_message && (
-      selectedConversation.latest_message.sender_id === user?.id ||
-      selectedConversation.latest_message.sender?.role === "agent" ||
-      selectedConversation.latest_message.sender?.role === "superadmin" ||
-      selectedConversation.latest_message.sender?.role === "manager"
-    )) ||
-    messages.some(
-      (m) =>
-        m.sender_id === user?.id ||
-        m.sender?.role === "agent" ||
-        m.sender?.role === "superadmin" ||
-        m.sender?.role === "manager"
-    )
-  );
-
   return (
     <div className="flex h-screen w-full bg-slate-100 overflow-hidden">
       {/* Sidebar: Agent Profile & Inbox */}
@@ -550,7 +535,7 @@ export function AgentWorkspace() {
             <select
               value={status?.availability || "available"}
               onChange={(e) => handleStatusChange(e.target.value as AgentAvailability)}
-              className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1 px-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#023E8A]"
+              className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1 px-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
             >
               <option value="available">🟢 Available</option>
               <option value="away">🟡 Away</option>
@@ -577,23 +562,7 @@ export function AgentWorkspace() {
           ) : (
             conversations.map((conv) => {
               const isSelected = selectedConversation?.id === conv.id;
-              const isCsReplied = Boolean(
-                conv.first_response_at ||
-                (conv.latest_message && (
-                  conv.latest_message.sender_id === user?.id ||
-                  conv.latest_message.sender?.role === "agent" ||
-                  conv.latest_message.sender?.role === "superadmin" ||
-                  conv.latest_message.sender?.role === "manager"
-                )) ||
-                (selectedConversation?.id === conv.id &&
-                  messages.some(
-                    (m) =>
-                      m.sender_id === user?.id ||
-                      m.sender?.role === "agent" ||
-                      m.sender?.role === "superadmin" ||
-                      m.sender?.role === "manager"
-                  ))
-              );
+              const unreadCount = unreadCounts[conv.id] || 0;
 
               return (
                 <div
@@ -602,38 +571,21 @@ export function AgentWorkspace() {
                   className={cn(
                     "p-3 rounded-xl border transition-all cursor-pointer",
                     isSelected
-                      ? "bg-[#023E8A]/5 border-[#023E8A] text-[#023E8A]"
+                      ? "bg-[#1E3785]/5 border-[#1E3785] text-[#1E3785]"
                       : "bg-white border-slate-200 hover:bg-slate-50 text-slate-800"
                   )}
                 >
-                  <div className="flex items-center justify-between gap-1.5 mb-1.5">
-                    <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
                       <span className="text-xs font-semibold truncate text-slate-900">
                         {conv.member?.name || `Customer #${conv.member_id}`}
                       </span>
-                      {isCsReplied ? (
+                      {unreadCount > 0 && (
                         <span
-                          title="Customer Service sudah mengirim pesan / membalas percakapan ini"
-                          className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0"
+                          title={`${unreadCount} pesan baru`}
+                          className="h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full bg-[#1E3785] text-white text-[11px] font-bold shrink-0 shadow-xs"
                         >
-                          <CheckCheck className="h-3 w-3 text-emerald-600" />
-                          CS Terkirim
-                        </span>
-                      ) : (
-                        <span
-                          title="Belum ada pesan terkirim dari Customer Service"
-                          className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200 shrink-0"
-                        >
-                          <Clock className="h-3 w-3 text-amber-600" />
-                          Menunggu CS
-                        </span>
-                      )}
-                      {(unreadCounts[conv.id] || 0) > 0 && (
-                        <span
-                          title="Pesan baru belum dibaca"
-                          className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-600 text-white animate-pulse shrink-0"
-                        >
-                          {unreadCounts[conv.id]} Baru
+                          {unreadCount}
                         </span>
                       )}
                     </div>
@@ -642,14 +594,8 @@ export function AgentWorkspace() {
                     </Badge>
                   </div>
 
-                  {conv.latest_message && (
-                    <p className="text-xs text-slate-500 line-clamp-1">
-                      {conv.latest_message.content || "[Lampiran]"}
-                    </p>
-                  )}
-
-                  <div className="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
-                    <span>{formatTime(conv.started_at)}</span>
+                  <div className="text-[10px] text-slate-400 mt-1.5 flex items-center justify-between">
+                    <span>Mulai: {formatTime(conv.started_at)}</span>
                   </div>
                 </div>
               );
@@ -685,22 +631,9 @@ export function AgentWorkspace() {
                   <UserIcon className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-semibold text-slate-900 leading-tight">
-                      {selectedConversation.member?.name || `Customer #${selectedConversation.member_id}`}
-                    </h3>
-                    {selectedConversationIsCsReplied ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-xs">
-                        <CheckCheck className="h-3.5 w-3.5 text-emerald-600" />
-                        Pesan CS Terkirim
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200 shadow-xs">
-                        <Clock className="h-3.5 w-3.5 text-amber-600" />
-                        Menunggu Balasan CS
-                      </span>
-                    )}
-                  </div>
+                  <h3 className="text-sm font-semibold text-slate-900 leading-tight">
+                    {selectedConversation.member?.name || `Customer #${selectedConversation.member_id}`}
+                  </h3>
                   <p className="text-[11px] text-slate-500">
                     {selectedConversation.member?.email} • Mulai: {formatTime(selectedConversation.started_at)}
                   </p>
@@ -748,7 +681,7 @@ export function AgentWorkspace() {
                       className={cn(
                         "rounded-2xl px-4 py-2.5 text-sm shadow-xs break-words",
                         isMe
-                          ? "bg-[#023E8A] text-white rounded-tr-xs"
+                          ? "bg-[#1E3785] text-white rounded-tr-xs"
                           : "bg-white text-slate-900 border border-slate-200 rounded-tl-xs"
                       )}
                     >
@@ -866,7 +799,7 @@ export function AgentWorkspace() {
                       {previewUrl ? (
                         <img src={previewUrl} alt="Preview" className="h-full w-full object-cover" />
                       ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-blue-50 text-[#023E8A]">
+                        <div className="h-full w-full flex items-center justify-center bg-blue-50 text-[#1E3785]">
                           <ImageIcon className="h-4 w-4" />
                         </div>
                       )}
@@ -928,7 +861,7 @@ export function AgentWorkspace() {
                     onClick={() => setAttachmentMenuOpen((prev) => !prev)}
                     className={cn(
                       "text-slate-500 hover:text-slate-700 shrink-0 h-10 w-10 rounded-xl transition-all",
-                      attachmentMenuOpen && "bg-blue-100 text-[#023E8A] ring-2 ring-[#023E8A]/20"
+                      attachmentMenuOpen && "bg-blue-100 text-[#1E3785] ring-2 ring-[#1E3785]/20"
                     )}
                     aria-label="Lampirkan foto atau video"
                   >
@@ -951,11 +884,11 @@ export function AgentWorkspace() {
                           }}
                           className="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-left hover:bg-blue-50 transition-colors group cursor-pointer"
                         >
-                          <div className="h-8 w-8 rounded-lg bg-blue-100 text-[#023E8A] group-hover:bg-[#023E8A] group-hover:text-white flex items-center justify-center transition-colors shrink-0">
+                          <div className="h-8 w-8 rounded-lg bg-blue-100 text-[#1E3785] group-hover:bg-[#1E3785] group-hover:text-white flex items-center justify-center transition-colors shrink-0">
                             <ImageIcon className="h-4 w-4" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-semibold text-slate-800 group-hover:text-[#023E8A]">Foto / Gambar</div>
+                            <div className="text-xs font-semibold text-slate-800 group-hover:text-[#1E3785]">Foto / Gambar</div>
                             <div className="text-[10px] text-slate-400">JPG, PNG, WEBP (Maks. 1MB)</div>
                           </div>
                         </button>
@@ -986,7 +919,7 @@ export function AgentWorkspace() {
                   value={inputContent}
                   onChange={handleInputChange}
                   placeholder="Ketik balasan untuk pelanggan..."
-                  className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#023E8A] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#023E8A]"
+                  className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1E3785] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
                 />
 
                 <Button
@@ -1017,10 +950,10 @@ export function AgentWorkspace() {
           </>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <div className="h-16 w-16 rounded-full bg-[#023E8A]/10 text-[#023E8A] flex items-center justify-center mb-4">
+            <div className="h-16 w-16 rounded-full bg-[#1E3785]/10 text-[#1E3785] flex items-center justify-center mb-4">
               <Headphones className="h-8 w-8" />
             </div>
-            <h3 className="text-base font-semibold text-slate-800">Workspace Customer Service ION</h3>
+            <h3 className="text-base font-semibold text-slate-800">Workspace CS ION Broadband Livechat</h3>
             <p className="text-xs text-slate-500 mt-1 max-w-sm">
               Pilih salah satu percakapan di bilah samping untuk mulai melayani pelanggan secara realtime.
             </p>

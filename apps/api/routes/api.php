@@ -15,7 +15,8 @@ Route::get('/health', [HealthController::class, 'health']);
 
 // Public Authentication Routes
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
+    // Manual registration disabled: members authenticate via Google/Facebook OAuth
+    // Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/oauth/{provider}', [AuthController::class, 'oauthRedirect']);
     Route::get('/oauth/{provider}/callback', [AuthController::class, 'oauthCallback']);

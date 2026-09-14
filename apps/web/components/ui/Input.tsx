@@ -22,7 +22,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           ref={ref}
           className={cn(
-            "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#023E8A] focus:outline-none focus:ring-1 focus:ring-[#023E8A] disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 transition-colors",
+            "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1E3785] focus:outline-none focus:ring-1 focus:ring-[#1E3785] disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 transition-colors",
             error && "border-red-500 focus:border-red-500 focus:ring-red-500",
             className
           )}

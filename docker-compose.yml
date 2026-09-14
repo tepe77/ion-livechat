@@ -47,8 +47,8 @@ services:
       APP_ENV: ${APP_ENV:-production}
       APP_KEY: ${APP_KEY:-base64:XG8o0uT6kX9qX67b7uO1Q8Z3HlZ/tqfK1lI5jZ4rZ1A=}
       APP_DEBUG: ${APP_DEBUG:-false}
-      APP_URL: ${APP_URL:-http://localhost}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
+      APP_URL: ${APP_URL:-https://livechat.zayra.web.id}
+      FRONTEND_URL: ${FRONTEND_URL:-https://livechat.zayra.web.id}
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432
@@ -182,9 +182,9 @@ services:
       PORT: 3000
       NEXT_PUBLIC_API_URL: /api/v1
       NEXT_PUBLIC_REVERB_KEY: ${REVERB_APP_KEY:-ionlivechatkey}
-      NEXT_PUBLIC_REVERB_HOST: ${PUBLIC_HOST:-localhost}
-      NEXT_PUBLIC_REVERB_PORT: ${PUBLIC_PORT:-80}
-      NEXT_PUBLIC_REVERB_SCHEME: ${PUBLIC_SCHEME:-http}
+      NEXT_PUBLIC_REVERB_HOST: ${PUBLIC_HOST:-livechat.zayra.web.id}
+      NEXT_PUBLIC_REVERB_PORT: ${PUBLIC_PORT:-443}
+      NEXT_PUBLIC_REVERB_SCHEME: ${PUBLIC_SCHEME:-https}
     depends_on:
       - api
     networks:
@@ -195,7 +195,7 @@ services:
     container_name: ion_nginx
     restart: unless-stopped
     ports:
-      - "${HTTP_PORT:-80}:80"
+      - "127.0.0.1:${HTTP_PORT:-8888}:80"
     volumes:
       - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro

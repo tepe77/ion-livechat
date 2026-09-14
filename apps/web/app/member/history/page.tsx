@@ -12,7 +12,9 @@ import { Badge } from "../../../components/ui/Badge";
 import { Button } from "../../../components/ui/Button";
 import { Dialog } from "../../../components/ui/Dialog";
 import { MemberProfileDropdown } from "../../../components/member/MemberProfileDropdown";
+import { MemberBottomNav } from "../../../components/member/MemberBottomNav";
 import { RatingStars } from "../../../components/ui/RatingStars";
+import { BrandLogo } from "../../../components/ui/BrandLogo";
 import type { Conversation, Message } from "@ion/types";
 import {
   ArrowLeft,
@@ -95,20 +97,12 @@ export default function MemberHistoryPage() {
 
           <div className="h-4 w-px bg-slate-200" />
 
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-[#023E8A] text-white flex items-center justify-center">
-              <Headphones className="h-4 w-4" />
-            </div>
-            <div>
-              <div className="text-sm font-bold text-slate-900">Riwayat Layanan Live Chat</div>
-              <div className="text-[11px] text-slate-500">Transkrip Percakapan Selesai & Bantuan</div>
-            </div>
-          </div>
+          <BrandLogo subtitle="Transkrip Percakapan Selesai & Bantuan" />
         </div>
 
         <div className="flex items-center gap-3">
           <Link href="/member/chat">
-            <Button variant="primary" size="sm" className="text-xs bg-[#023E8A] hover:bg-[#034A9B]">
+            <Button variant="primary" size="sm" className="text-xs bg-[#1E3785] hover:bg-[#162B6B]">
               Buka Chat Aktif
             </Button>
           </Link>
@@ -120,9 +114,9 @@ export default function MemberHistoryPage() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-4 lg:p-6 grid grid-cols-1 md:grid-cols-12 gap-5">
+      <main className="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-4 lg:p-6 grid grid-cols-1 md:grid-cols-12 gap-5 pb-20 md:pb-6">
         {/* Left Column: Conversation List */}
-        <div className="md:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-[calc(100dvh-5.5rem)] flex flex-col">
+        <div className="md:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-[calc(100dvh-9.5rem)] md:h-[calc(100dvh-5.5rem)] flex flex-col">
           <MemberHistory
             onSelectConversation={handleSelectConversation}
             onStartNewChat={() => router.push("/member/chat")}
@@ -194,7 +188,7 @@ export default function MemberHistoryPage() {
               <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/40">
                 {loadingMessages ? (
                   <div className="flex items-center justify-center h-full">
-                    <Loader2 className="h-6 w-6 text-[#023E8A] animate-spin" />
+                    <Loader2 className="h-6 w-6 text-[#1E3785] animate-spin" />
                   </div>
                 ) : messages.length === 0 ? (
                   <div className="text-center py-12 text-xs text-slate-400">
@@ -212,7 +206,7 @@ export default function MemberHistoryPage() {
                         <div
                           className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-xs ${
                             isUser
-                              ? "bg-[#023E8A] text-white rounded-br-xs"
+                              ? "bg-[#1E3785] text-white rounded-br-xs"
                               : "bg-white text-slate-800 border border-slate-200 rounded-bl-xs shadow-2xs"
                           }`}
                         >
@@ -296,6 +290,9 @@ export default function MemberHistoryPage() {
           </div>
         </div>
       </Dialog>
+
+      {/* Mobile Responsive Bottom Navigation Bar */}
+      <MemberBottomNav />
     </div>
   );
 }

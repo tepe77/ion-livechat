@@ -25,7 +25,7 @@ export default function AgentWorkspacePage() {
   if (!isInitialized || !user || user.role === "member") {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#023E8A] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin" />
       </div>
     );
   }

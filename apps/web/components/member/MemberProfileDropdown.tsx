@@ -143,9 +143,9 @@ export function MemberProfileDropdown() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 p-1.5 pl-2 pr-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all text-left shadow-2xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#023E8A]/20"
+        className="flex items-center gap-2.5 p-1.5 pl-2 pr-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all text-left shadow-2xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1E3785]/20"
       >
-        <div className="h-7 w-7 rounded-lg bg-gradient-to-tr from-[#023E8A] to-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+        <div className="h-7 w-7 rounded-lg bg-gradient-to-tr from-[#1E3785] to-blue-700 text-white font-bold text-xs flex items-center justify-center shadow-xs">
           {user?.name?.charAt(0).toUpperCase() || "M"}
         </div>
         <div className="hidden sm:flex flex-col items-start leading-tight">
@@ -172,7 +172,7 @@ export function MemberProfileDropdown() {
               <span className="text-xs font-bold text-slate-900 truncate">
                 {user?.name || "Member ION"}
               </span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-[#023E8A] border border-blue-100">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-[#1E3785] border border-blue-100">
                 Pelanggan
               </span>
             </div>
@@ -290,7 +290,7 @@ export function MemberProfileDropdown() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingProfile}
-              className="text-xs bg-[#023E8A] hover:bg-[#034A9B]"
+              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
             >
               Simpan Perubahan
             </Button>
@@ -321,7 +321,7 @@ export function MemberProfileDropdown() {
 
           <div className="p-3.5 bg-blue-50/60 border border-blue-100 rounded-xl text-xs text-slate-600 space-y-1">
             <div className="font-semibold text-slate-800 flex items-center gap-1.5">
-              <Sparkles className="h-4 w-4 text-[#023E8A]" />
+              <Sparkles className="h-4 w-4 text-[#1E3785]" />
               Tentang Nomor ID Pelanggan
             </div>
             <p className="text-[11px] text-slate-500 leading-relaxed">
@@ -355,7 +355,7 @@ export function MemberProfileDropdown() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingCustNum}
-              className="text-xs bg-[#023E8A] hover:bg-[#034A9B]"
+              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
             >
               Simpan Nomor
             </Button>

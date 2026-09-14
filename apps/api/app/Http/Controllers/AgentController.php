@@ -23,6 +23,9 @@ class AgentController extends Controller
 
         $query = Conversation::where('agent_id', $agent->id)
             ->with(['member', 'latestMessage'])
+            ->withCount(['messages as unread_messages_count' => function ($q) use ($agent) {
+                $q->where('sender_id', '!=', $agent->id)->whereNull('read_at');
+            }])
             ->orderBy('updated_at', 'desc');
 
         if ($request->has('status')) {

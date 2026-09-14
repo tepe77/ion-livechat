@@ -79,14 +79,14 @@ export function AdminUsersTable() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && fetchUsers()}
-              className="pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-[#023E8A]"
+              className="pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
             />
           </div>
 
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#023E8A]"
+            className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
           >
             <option value="">Semua Peran</option>
             <option value="superadmin">Superadmin</option>
@@ -129,7 +129,7 @@ export function AdminUsersTable() {
                     <td className="px-4 py-3.5 text-slate-600">{user.email}</td>
                     <td className="px-4 py-3.5">
                       <span className="inline-flex items-center gap-1 font-medium capitalize bg-slate-100 px-2 py-0.5 rounded text-slate-700">
-                        <Shield className="h-3 w-3 text-[#023E8A]" />
+                        <Shield className="h-3 w-3 text-[#1E3785]" />
                         {user.role}
                       </span>
                     </td>
@@ -186,7 +186,7 @@ export function AdminUsersTable() {
               <select
                 value={selectedRoleId}
                 onChange={(e) => setSelectedRoleId(Number(e.target.value))}
-                className="w-full rounded-lg border border-slate-300 p-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#023E8A]"
+                className="w-full rounded-lg border border-slate-300 p-2 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
               >
                 {roles.map((role) => (
                   <option key={role.id} value={role.id}>

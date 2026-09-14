@@ -85,7 +85,7 @@ export function MemberHistory({
             variant="primary"
             size="sm"
             onClick={onStartNewChat}
-            className="text-xs bg-[#023E8A] hover:bg-[#034A9B] py-1 px-3"
+            className="text-xs bg-[#1E3785] hover:bg-[#162B6B] py-1 px-3"
           >
             <MessageSquare className="h-3.5 w-3.5 mr-1" /> Chat Baru
           </Button>
@@ -100,7 +100,7 @@ export function MemberHistory({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari sesi atau teknisi..."
-              className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs placeholder:text-slate-400 focus:outline-none focus:border-[#023E8A] focus:bg-white transition-colors"
+              className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs placeholder:text-slate-400 focus:outline-none focus:border-[#1E3785] focus:bg-white transition-colors"
             />
           </div>
         )}
@@ -116,7 +116,7 @@ export function MemberHistory({
           </div>
         ) : conversations.length === 0 ? (
           <div className="text-center py-12 px-4">
-            <div className="inline-flex items-center justify-center h-11 w-11 rounded-full bg-blue-50 text-[#023E8A] mb-2.5">
+            <div className="inline-flex items-center justify-center h-11 w-11 rounded-full bg-blue-50 text-[#1E3785] mb-2.5">
               <Headphones className="h-5 w-5" />
             </div>
             <h3 className="text-xs font-bold text-slate-800">Belum ada riwayat percakapan</h3>
@@ -127,7 +127,7 @@ export function MemberHistory({
               variant="primary"
               size="sm"
               onClick={onStartNewChat}
-              className="mt-3 text-xs bg-[#023E8A]"
+              className="mt-3 text-xs bg-[#1E3785] hover:bg-[#162B6B]"
             >
               Mulai Chat Pertama
             </Button>
@@ -146,7 +146,7 @@ export function MemberHistory({
                 onClick={() => onSelectConversation(conv)}
                 className={`group p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
                   isSelected
-                    ? "bg-blue-50/70 border-[#023E8A] shadow-xs"
+                    ? "bg-blue-50/70 border-[#1E3785] shadow-xs"
                     : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/60"
                 }`}
               >
@@ -199,7 +199,7 @@ export function MemberHistory({
 
                   <ChevronRight
                     className={`h-4 w-4 transition-colors ${
-                      isSelected ? "text-[#023E8A]" : "text-slate-300 group-hover:text-slate-500"
+                      isSelected ? "text-[#1E3785]" : "text-slate-300 group-hover:text-slate-500"
                     }`}
                   />
                 </div>

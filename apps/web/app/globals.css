@@ -2,11 +2,11 @@
 
 @layer base {
   :root {
-    --brand-primary: #023E8A;
-    --brand-primary-hover: #034A9B;
-    --brand-primary-active: #0757AE;
-    --brand-primary-soft: #DBEAFE;
-    --brand-primary-surface: #EFF6FF;
+    --brand-primary: #1E3785;
+    --brand-primary-hover: #162B6B;
+    --brand-primary-active: #102154;
+    --brand-primary-soft: #E8EDF9;
+    --brand-primary-surface: #F3F6FD;
 
     --bg-app: #F8FAFC;
     --surface-card: #FFFFFF;

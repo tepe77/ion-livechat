@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "../../stores/authStore";
 import { Button } from "../../components/ui/Button";
+import { BrandLogo } from "../../components/ui/BrandLogo";
 import {
   ShieldAlert,
   Users,
@@ -39,7 +40,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!isInitialized || !user || user.role !== "superadmin") {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#023E8A] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin" />
       </div>
     );
   }
@@ -53,19 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-slate-100 flex flex-col">
       {/* Admin Top Header */}
       <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-purple-700 text-white flex items-center justify-center shadow-xs">
-            <ShieldAlert className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-base font-bold text-slate-900 leading-tight">
-              Portal Superadmin ION
-            </div>
-            <div className="text-xs text-slate-500">
-              Pengaturan Akun, Hak Akses & Integritas Sistem Live Chat
-            </div>
-          </div>
-        </div>
+        <BrandLogo subtitle="Portal Superadmin & Manajemen Sistem" />
 
         <div className="flex items-center gap-3">
           <Link href="/manager/dashboard">
