@@ -22,6 +22,7 @@ import {
   User as UserIcon,
   XCircle,
   ArrowRightLeft,
+  ArrowLeft,
   FileText,
   Clock,
   LogOut,
@@ -520,9 +521,14 @@ export function AgentWorkspace() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-slate-100 overflow-hidden">
+    <div className="flex h-[100dvh] w-full bg-slate-100 overflow-hidden relative">
       {/* Sidebar: Agent Profile & Inbox */}
-      <aside className="w-80 border-r border-slate-200 bg-white flex flex-col shrink-0">
+      <aside
+        className={cn(
+          "border-r border-slate-200 bg-white flex flex-col shrink-0 h-full transition-all duration-150",
+          selectedConversation ? "hidden md:flex md:w-80" : "flex w-full md:w-80"
+        )}
+      >
         {/* Agent Profile & Presence Header */}
         <div className="p-3.5 border-b border-slate-200 bg-slate-50/50">
           <div className="flex items-center justify-between gap-2 mb-3">
@@ -605,9 +611,14 @@ export function AgentWorkspace() {
       </aside>
 
       {/* Main Workspace Area: Active Chat */}
-      <main className="flex-1 flex flex-col bg-slate-50 overflow-hidden">
+      <main
+        className={cn(
+          "flex-1 flex flex-col bg-slate-50 overflow-hidden h-full",
+          selectedConversation ? "flex w-full" : "hidden md:flex"
+        )}
+      >
         {closedNotice && (
-          <div className="mx-6 mt-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs flex items-center justify-between shadow-xs animate-in fade-in slide-in-from-top-2 shrink-0">
+          <div className="mx-3 sm:mx-6 mt-3 sm:mt-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs flex items-center justify-between shadow-xs animate-in fade-in slide-in-from-top-2 shrink-0">
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 text-amber-600 shrink-0" />
               <span className="font-medium">{closedNotice}</span>
@@ -615,7 +626,7 @@ export function AgentWorkspace() {
             <button
               type="button"
               onClick={() => setClosedNotice(null)}
-              className="text-amber-700 hover:text-amber-900 font-semibold text-xs ml-4 cursor-pointer"
+              className="text-amber-700 hover:text-amber-900 font-semibold text-xs ml-2 sm:ml-4 cursor-pointer"
             >
               Tutup
             </button>
@@ -625,47 +636,61 @@ export function AgentWorkspace() {
         {selectedConversation ? (
           <>
             {/* Top Chat Action Bar */}
-            <header className="h-14 px-6 bg-white border-b border-slate-200 flex items-center justify-between shrink-0 shadow-xs">
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-semibold text-xs">
+            <header className="h-14 px-3 sm:px-6 bg-white border-b border-slate-200 flex items-center justify-between shrink-0 shadow-xs">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <button
+                  type="button"
+                  onClick={() => setSelectedConversation(null)}
+                  className="md:hidden p-1.5 -ml-1 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 shrink-0 cursor-pointer"
+                  title="Kembali ke Daftar Chat"
+                  aria-label="Kembali"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </button>
+
+                <div className="h-8 w-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-semibold text-xs shrink-0">
                   <UserIcon className="h-4 w-4" />
                 </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-slate-900 leading-tight">
+                <div className="min-w-0">
+                  <h3 className="text-xs sm:text-sm font-semibold text-slate-900 leading-tight truncate max-w-[130px] xs:max-w-[180px] sm:max-w-[280px]">
                     {selectedConversation.member?.name || `Customer #${selectedConversation.member_id}`}
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[10px] sm:text-[11px] text-slate-500 truncate max-w-[130px] xs:max-w-[180px] sm:max-w-[280px]">
                     {selectedConversation.member?.email} • Mulai: {formatTime(selectedConversation.started_at)}
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <RealtimeIndicator className="hidden md:inline-flex" />
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <RealtimeIndicator className="hidden lg:inline-flex" />
 
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowTransferModal(true)}
-                  className="text-xs text-slate-700"
+                  className="text-xs text-slate-700 px-2.5 sm:px-3 h-8 sm:h-9"
+                  title="Transfer Chat"
                 >
-
-                  <ArrowRightLeft className="h-3.5 w-3.5 mr-1.5" /> Transfer
+                  <ArrowRightLeft className="h-3.5 w-3.5 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Transfer</span>
                 </Button>
 
                 <Button
                   variant="danger"
                   size="sm"
                   onClick={handleClose}
-                  className="text-xs"
+                  className="text-xs px-2.5 sm:px-3 h-8 sm:h-9"
+                  title="Selesaikan Chat"
                 >
-                  <XCircle className="h-3.5 w-3.5 mr-1.5" /> Selesaikan Chat
+                  <XCircle className="h-3.5 w-3.5 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Selesaikan Chat</span>
+                  <span className="sm:hidden">Tutup</span>
                 </Button>
               </div>
             </header>
 
             {/* Messages Area */}
-            <div className="flex-1 p-6 chat-scroll-container space-y-3">
+            <div className="flex-1 p-3 sm:p-6 chat-scroll-container space-y-3">
               {messages.map((msg) => {
                 const isMe = msg.sender_id === user?.id;
 
@@ -673,7 +698,7 @@ export function AgentWorkspace() {
                   <div
                     key={msg.id}
                     className={cn(
-                      "flex flex-col max-w-[70%]",
+                      "flex flex-col max-w-[85%] sm:max-w-[70%]",
                       isMe ? "ml-auto items-end" : "mr-auto items-start"
                     )}
                   >
@@ -836,8 +861,8 @@ export function AgentWorkspace() {
             )}
 
             {/* Composer */}
-            <footer className="p-4 bg-white border-t border-slate-200 shrink-0">
-              <form onSubmit={handleSend} className="flex items-center gap-3">
+            <footer className="p-2.5 sm:p-4 bg-white border-t border-slate-200 shrink-0">
+              <form onSubmit={handleSend} className="flex items-center gap-2 sm:gap-3">
                 {/* Attachment Submenu */}
                 <div className="relative" ref={attachmentMenuRef}>
                   <input
@@ -870,7 +895,7 @@ export function AgentWorkspace() {
 
                   {/* Submenu Popover */}
                   {attachmentMenuOpen && (
-                    <div className="absolute bottom-full left-0 mb-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
+                    <div className="absolute bottom-full left-0 mb-2 w-60 sm:w-64 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
                       <div className="px-2.5 py-1.5 border-b border-slate-100 mb-1">
                         <p className="text-[11px] font-bold text-slate-800 uppercase tracking-wide">Pilih Jenis Lampiran</p>
                         <p className="text-[10px] text-slate-400">Kirim foto screenshot atau video panduan</p>
@@ -919,7 +944,7 @@ export function AgentWorkspace() {
                   value={inputContent}
                   onChange={handleInputChange}
                   placeholder="Ketik balasan untuk pelanggan..."
-                  className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1E3785] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
+                  className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 sm:px-4 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1E3785] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
                 />
 
                 <Button
@@ -928,9 +953,10 @@ export function AgentWorkspace() {
                   size="md"
                   isLoading={isSending}
                   disabled={!inputContent.trim() && !selectedFile}
-                  className="px-5 shrink-0"
+                  className="px-3 sm:px-5 h-10 shrink-0"
                 >
-                  <Send className="h-4 w-4 mr-1.5" /> Kirim
+                  <Send className="h-4 w-4 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Kirim</span>
                 </Button>
               </form>
             </footer>

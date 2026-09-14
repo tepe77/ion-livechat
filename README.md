@@ -30,7 +30,7 @@ A high-concurrency, self-hosted Customer Service Live Chat application built spe
 
 ```
                      ┌────────────────────────┐
-                     │   Reverse Proxy / SSL   │
+                     │  Reverse Proxy / SSL   │
                      │         (Nginx)        │
                      └───────────┬────────────┘
                                  │
@@ -132,14 +132,14 @@ make test-frontend
 ## 📁 Repository Structure
 
 ```
-.
+
 │
 ├── apps/
 │   ├── api/                              # Laravel 12 Backend API
 │   │   ├── app/
 │   │   │   ├── Enums/                    # UserRole, ConversationStatus, etc.
 │   │   │   ├── Events/                   # MessageCreated, ConversationAssigned, etc.
-│   │   │   ├── Http/Controllers/        # REST Controllers (Auth, Chat, Manager, Admin)
+│   │   │   ├── Http/Controllers/         # REST Controllers (Auth, Chat, Manager, Admin)
 │   │   │   ├── Jobs/                     # Stale Agent & Capacity Reconciliation Jobs
 │   │   │   ├── Models/                   # Eloquent Models
 │   │   │   ├── Policies/                 # Sanctum & Model Authorization Policies
@@ -184,4 +184,4 @@ make test-frontend
 
 ## 📄 License
 
-Proprietary & Confidential. Built for ION Internet Service Provider.
+Proprietary & Confidential. Built for ION Broadband Internet Service Provider.
