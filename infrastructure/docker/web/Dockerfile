@@ -28,6 +28,7 @@ COPY apps/web .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=1024"
 
 # Build Next.js application
 RUN npm run build

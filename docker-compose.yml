@@ -37,6 +37,7 @@ services:
       - ion-network
 
   api:
+    image: ion-livechat-api:latest
     build:
       context: .
       dockerfile: infrastructure/docker/api/Dockerfile
@@ -86,9 +87,7 @@ services:
       - ion-network
 
   reverb:
-    build:
-      context: .
-      dockerfile: infrastructure/docker/api/Dockerfile
+    image: ion-livechat-api:latest
     container_name: ion_reverb
     restart: unless-stopped
     command: ["reverb"]
@@ -122,9 +121,7 @@ services:
       - ion-network
 
   queue:
-    build:
-      context: .
-      dockerfile: infrastructure/docker/api/Dockerfile
+    image: ion-livechat-api:latest
     container_name: ion_queue
     restart: unless-stopped
     command: ["queue"]
@@ -151,9 +148,7 @@ services:
       - ion-network
 
   scheduler:
-    build:
-      context: .
-      dockerfile: infrastructure/docker/api/Dockerfile
+    image: ion-livechat-api:latest
     container_name: ion_scheduler
     restart: unless-stopped
     command: ["scheduler"]
@@ -180,6 +175,7 @@ services:
       - ion-network
 
   web:
+    image: ion-livechat-web:latest
     build:
       context: .
       dockerfile: infrastructure/docker/web/Dockerfile
