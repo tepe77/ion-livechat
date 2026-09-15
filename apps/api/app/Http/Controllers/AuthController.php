@@ -66,6 +66,9 @@ class AuthController extends Controller
         }
 
         $user->update(['last_login_at' => now()]);
+        if ($user->isAgent()) {
+            $this->agentService->recordHeartbeat($user);
+        }
         $token = $user->createToken('api_token')->plainTextToken;
 
         $this->auditService->log($user, 'user.login', 'User', $user->id);

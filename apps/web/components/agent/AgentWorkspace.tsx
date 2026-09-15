@@ -212,7 +212,8 @@ export function AgentWorkspace() {
   useEffect(() => {
     refreshInbox();
 
-    // 2. Heartbeat interval: send every 25 seconds
+    // 2. Heartbeat: send immediately on mount, then every 25 seconds
+    sendHeartbeat().catch(() => {});
     const heartbeatInterval = setInterval(() => {
       sendHeartbeat().catch(() => {});
     }, 25000);

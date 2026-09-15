@@ -132,4 +132,21 @@ class SettingTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonPath('code', 'LIVECHAT_DISABLED');
     }
+
+    public function test_agent_presence_broadcasts_on_system_presence_channel(): void
+    {
+        $event = new \App\Events\AgentStatusUpdated(
+            $this->agent->id,
+            AgentPresence::ONLINE,
+            AgentAvailability::AVAILABLE
+        );
+
+        $channels = $event->broadcastOn();
+        $channelNames = array_map(fn($c) => (string) $c, $channels);
+        $this->assertContains('system.presence', $channelNames);
+
+        $payload = $event->broadcastWith();
+        $this->assertArrayHasKey('has_online_agents', $payload);
+        $this->assertTrue($payload['has_online_agents']);
+    }
 }

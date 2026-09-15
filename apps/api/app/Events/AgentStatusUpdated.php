@@ -4,6 +4,8 @@ namespace App\Events;
 
 use App\Enums\AgentAvailability;
 use App\Enums\AgentPresence;
+use App\Services\Routing\RoutingService;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -27,6 +29,7 @@ class AgentStatusUpdated implements ShouldBroadcastNow
         return [
             new PrivateChannel('agent.' . $this->agentId),
             new PrivateChannel('manager.dashboard'),
+            new Channel('system.presence'),
         ];
     }
 
@@ -37,12 +40,20 @@ class AgentStatusUpdated implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
+        $hasOnlineAgents = false;
+        try {
+            $hasOnlineAgents = app(RoutingService::class)->hasOnlineAgents();
+        } catch (\Throwable $e) {
+            // fallback if service container fails
+        }
+
         return [
             'agent_id' => $this->agentId,
             'presence' => $this->presence->value,
             'availability' => $this->availability->value,
             'active_conversations' => $this->activeConversations,
             'max_concurrent_conversations' => $this->maxConcurrentConversations,
+            'has_online_agents' => $hasOnlineAgents,
         ];
     }
 }

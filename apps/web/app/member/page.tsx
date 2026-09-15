@@ -13,6 +13,7 @@ import { MemberBottomNav } from "../../components/member/MemberBottomNav";
 import { OfflineNoticeModal, type EmergencyContacts } from "../../components/member/OfflineNoticeModal";
 import { getPublicSettings, type SystemSettings } from "../../lib/api/settings";
 import { BrandLogo } from "../../components/ui/BrandLogo";
+import { getEcho } from "../../lib/realtime/client";
 import { formatDateTime, formatDate, formatTime } from "../../lib/utils";
 import type { Conversation } from "@ion/types";
 import {
@@ -83,6 +84,51 @@ export default function MemberOnboardingPage() {
       .then((data) => setSystemSettings(data))
       .catch(() => {});
   }, [user, isInitialized, router, fetchConversations]);
+
+  // Realtime agent presence listener & automatic sync
+  useEffect(() => {
+    const fetchLatestSettings = () => {
+      getPublicSettings()
+        .then((data) => setSystemSettings(data))
+        .catch(() => {});
+    };
+
+    // 1. Subscribe to public channel for instant realtime agent presence updates
+    const echo = getEcho();
+    if (echo) {
+      const presenceChannel = echo.channel("system.presence");
+      presenceChannel.listen(".agent.status.updated", (data: any) => {
+        if (typeof data?.has_online_agents === "boolean") {
+          setSystemSettings((prev) =>
+            prev ? { ...prev, has_online_agents: data.has_online_agents } : null
+          );
+        } else {
+          fetchLatestSettings();
+        }
+      });
+    }
+
+    // 2. Poll every 15 seconds as a fallback
+    const pollInterval = setInterval(fetchLatestSettings, 15000);
+
+    // 3. Immediately refresh when user returns to this browser tab
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        fetchLatestSettings();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("focus", fetchLatestSettings);
+
+    return () => {
+      if (echo) {
+        echo.leaveChannel("system.presence");
+      }
+      clearInterval(pollInterval);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("focus", fetchLatestSettings);
+    };
+  }, []);
 
   const handleStartChat = async () => {
     if (activeConv) {
@@ -168,9 +214,12 @@ export default function MemberOnboardingPage() {
         <section className="bg-gradient-to-r from-[#1E3785] via-blue-900 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
           <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 rounded-full bg-white/5 blur-2xl pointer-events-none" />
           <div className="relative z-10 max-w-2xl space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-blue-100">
-              <Activity className="h-3.5 w-3.5 text-emerald-400" />
-              <span>Status Jaringan: Normal & Optimal</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-medium text-blue-100">
+              <ShieldCheck className="h-3.5 w-3.5 text-blue-300" />
+              <span className="text-blue-200">No. Pelanggan:</span>
+              <span className="font-mono font-bold text-white tracking-wide">
+                {user?.customer_number || `ION-${String(user?.id || 1).padStart(6, "0")}`}
+              </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               Halo, {user?.name || "Pelanggan"}! 👋
@@ -183,67 +232,14 @@ export default function MemberOnboardingPage() {
           </div>
         </section>
 
-        {/* Subscription & Account Status Quick Bar */}
-        <section className="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-blue-50 text-[#1E3785] flex items-center justify-center shrink-0">
-                <Wifi className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-[11px] text-slate-400 font-medium">Paket Langganan</div>
-                <div className="text-xs font-bold text-slate-800">ION Fiber 100 Mbps</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-3 sm:pt-0 sm:pl-4">
-              <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-[11px] text-slate-400 font-medium">Status Perangkat ONT</div>
-                <div className="text-xs font-bold text-emerald-700 flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  Online (Normal)
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-3 sm:pt-0 sm:pl-4">
-              <div className="h-10 w-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
-                <Zap className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-[11px] text-slate-400 font-medium">Nomor Pelanggan</div>
-                <div className="text-xs font-mono font-bold text-slate-800">
-                  {user?.customer_number || `ION-${String(user?.id || 1).padStart(6, "0")}`}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 pt-3 sm:pt-0 sm:pl-4">
-              <div className="h-10 w-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                <Clock className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-[11px] text-slate-400 font-medium">Jam Operasional Layanan</div>
-                <div className="text-xs font-bold text-slate-800">
-                  {systemSettings?.operational_hours || "24 Jam / 7 Hari"}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Primary Action Cards Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Main Action Cards: 1 Card for Live Chat, 1 Card for Riwayat Percakapan & Transkrip */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           {/* Card 1: Live Chat / Customer Service */}
           <div
-            onClick={handleStartChat}
-            className={`group relative rounded-3xl p-6 border transition-all cursor-pointer shadow-sm flex flex-col justify-between ${
+            className={`group relative rounded-3xl p-6 sm:p-7 border transition-all shadow-xs flex flex-col justify-between ${
               activeConv
-                ? "bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/40 border-blue-300 hover:shadow-md hover:border-[#1E3785]"
-                : "bg-white border-slate-200 hover:border-[#1E3785]/50 hover:shadow-md"
+                ? "bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/40 border-blue-300 shadow-sm"
+                : "bg-white border-slate-200 hover:border-[#1E3785]/40 hover:shadow-md"
             }`}
           >
             <div>
@@ -252,46 +248,61 @@ export default function MemberOnboardingPage() {
                   className={`h-12 w-12 rounded-2xl flex items-center justify-center shadow-xs ${
                     activeConv
                       ? "bg-[#1E3785] text-white"
-                      : "bg-blue-50 text-[#1E3785] group-hover:bg-[#1E3785] group-hover:text-white transition-colors"
+                      : "bg-blue-50 text-[#1E3785]"
                   }`}
                 >
                   <MessageSquare className="h-6 w-6" />
                 </div>
+
                 {activeConv ? (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
                     <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
                     Sesi Berjalan (#{activeConv.id})
                   </span>
                 ) : systemSettings?.has_online_agents === false ? (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 transition-colors">
                     <span className="h-2 w-2 rounded-full bg-amber-500" />
                     Offline (Hotline 24 Jam)
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 transition-colors">
                     <span className="h-2 w-2 rounded-full bg-emerald-500" />
                     Teknisi Siap Membantu
                   </span>
                 )}
               </div>
 
-              <h2 className="text-lg font-bold text-slate-900 mb-1.5">
+              <h2 className="text-xl font-bold text-slate-900 mb-2">
                 {activeConv ? "Lanjutkan Sesi Chat Aktif" : "Mulai Obrolan / Konsultasi Baru"}
               </h2>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
                 {activeConv
                   ? `Anda memiliki percakapan aktif yang dilayani oleh ${
                       activeConv.agent?.name || "Petugas CS ION"
-                    }. Klik untuk kembali ke ruang obrolan.`
-                  : "Mulai percakapan bantuan dengan teknisi ISP kami melalui Smart Routing otomatis untuk keluhan internet, reset modem, atau pertanyaan teknis."}
+                    }. Masuk kembali ke ruang chat untuk melanjutkan percakapan.`
+                  : "Mulai percakapan bantuan dengan teknisi ISP kami melalui Smart Routing otomatis untuk kendala internet, konfigurasi router WiFi, atau pertanyaan layanan."}
               </p>
+
+              {/* Service information pill */}
+              <div className="mt-5 p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-3">
+                <div className="h-8 w-8 rounded-xl bg-blue-100/60 text-[#1E3785] flex items-center justify-center shrink-0">
+                  <Clock className="h-4 w-4" />
+                </div>
+                <div className="text-xs">
+                  <span className="text-slate-400 font-medium">Jam Operasional Layanan:</span>{" "}
+                  <strong className="text-slate-800 font-semibold">
+                    {systemSettings?.operational_hours || "24 Jam / 7 Hari"}
+                  </strong>
+                </div>
+              </div>
             </div>
 
             <div className="pt-6">
               <Button
                 variant="primary"
-                className="w-full justify-center bg-[#1E3785] hover:bg-[#162B6B] gap-2 shadow-xs"
+                className="w-full justify-center bg-[#1E3785] hover:bg-[#162B6B] gap-2 shadow-xs min-h-[44px] text-sm font-semibold rounded-xl"
                 isLoading={isStartingChat}
+                onClick={handleStartChat}
               >
                 <span>{activeConv ? "Masuk ke Ruang Chat Aktif" : "Mulai Percakapan Sekarang"}</span>
                 <ArrowRight className="h-4 w-4" />
@@ -299,105 +310,106 @@ export default function MemberOnboardingPage() {
             </div>
           </div>
 
-          {/* Card 2: Chat History */}
-          <Link
-            href="/member/history"
-            className="group rounded-3xl p-6 bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="h-12 w-12 rounded-2xl bg-slate-50 text-slate-700 group-hover:bg-slate-900 group-hover:text-white transition-colors flex items-center justify-center shadow-xs">
-                  <History className="h-6 w-6" />
+          {/* Card 2: Riwayat Percakapan & Transkrip (Single Unified Card) */}
+          <div className="rounded-3xl p-6 sm:p-7 bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center shadow-xs">
+                    <History className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-900">
+                      Riwayat Percakapan & Transkrip
+                    </h2>
+                    <p className="text-xs text-slate-500">
+                      Arsip percakapan dan solusi teknis lampau
+                    </p>
+                  </div>
                 </div>
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
+
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200/60">
                   {pastConversations.length} Percakapan
                 </span>
               </div>
 
-              <h2 className="text-lg font-bold text-slate-900 mb-1.5">
-                Riwayat Percakapan & Transkrip
-              </h2>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Akses arsip percakapan bantuan yang telah selesai, periksa solusi teknis lampau,
-                lihat rating kepuasan yang Anda berikan, atau hapus riwayat obrolan lama.
-              </p>
+              {pastConversations.length > 0 ? (
+                <div className="divide-y divide-slate-100 pt-1">
+                  {pastConversations.slice(0, 3).map((conv) => (
+                    <div
+                      key={conv.id}
+                      className="py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 hover:bg-slate-50/70 px-2.5 rounded-xl transition-colors"
+                    >
+                      <div className="space-y-1 min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-bold text-slate-900">
+                            {conv.agent?.name || "Customer Service ION"}
+                          </span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
+                            Sesi #{conv.id}
+                          </span>
+                          {conv.rating && (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                              <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
+                              {conv.rating.rating}/5
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-500 line-clamp-1 truncate">
+                          {conv.latest_message?.content || "Percakapan telah diselesaikan."}
+                        </p>
+                        <div className="text-[10px] text-slate-400">
+                          {formatDateTime(conv.closed_at || conv.created_at)}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                        <Link href="/member/history">
+                          <Button variant="ghost" size="sm" className="text-xs text-slate-600 h-8 px-2.5">
+                            Lihat Transkrip
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setConvToDelete(conv)}
+                          className="text-xs text-red-600 hover:bg-red-50 h-8 w-8 p-0"
+                          title="Hapus riwayat percakapan ini"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-8 px-4 text-center space-y-2 bg-slate-50/70 rounded-2xl border border-dashed border-slate-200">
+                  <div className="h-10 w-10 mx-auto rounded-full bg-slate-100 text-slate-400 flex items-center justify-center">
+                    <History className="h-5 w-5" />
+                  </div>
+                  <div className="text-xs font-semibold text-slate-700">
+                    Belum Ada Riwayat Percakapan
+                  </div>
+                  <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
+                    Sesi bantuan teknis dan transkrip obrolan yang telah selesai akan otomatis tercatat di sini.
+                  </p>
+                </div>
+              )}
             </div>
 
-            <div className="pt-6">
-              <Button variant="outline" className="w-full justify-center gap-2 group-hover:bg-slate-50">
-                <span>Lihat Riwayat Chat</span>
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </Link>
-        </section>
-
-        {/* Recent Conversations Snippet */}
-        {pastConversations.length > 0 && (
-          <section className="bg-white rounded-3xl border border-slate-200 p-6 shadow-2xs space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-bold text-slate-900">Percakapan Terakhir Anda</h3>
-                <p className="text-xs text-slate-500">Transkrip bantuan teknis yang telah selesai</p>
-              </div>
-              <Link href="/member/history">
-                <Button variant="ghost" size="sm" className="text-xs text-[#1E3785] gap-1">
-                  <span>Lihat Semua Riwayat</span>
-                  <ChevronRight className="h-3.5 w-3.5" />
+            <div className="pt-4 border-t border-slate-100 mt-2">
+              <Link href="/member/history" className="block">
+                <Button
+                  variant="outline"
+                  className="w-full justify-center gap-2 min-h-[42px] text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                >
+                  <span>Buka Semua Riwayat & Transkrip</span>
+                  <ChevronRight className="h-4 w-4 text-slate-400" />
                 </Button>
               </Link>
             </div>
-
-            <div className="divide-y divide-slate-100">
-              {pastConversations.slice(0, 3).map((conv) => (
-                <div
-                  key={conv.id}
-                  className="py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:bg-slate-50/70 px-2 rounded-xl transition-colors"
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-900">
-                        {conv.agent?.name || "Customer Service ION"}
-                      </span>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
-                        Sesi #{conv.id}
-                      </span>
-                      {conv.rating && (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
-                          <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
-                          {conv.rating.rating}/5
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-slate-500 line-clamp-1">
-                      {conv.latest_message?.content || "Percakapan telah diselesaikan."}
-                    </p>
-                    <div className="text-[10px] text-slate-400">
-                      Diselesaikan pada {formatDateTime(conv.closed_at || conv.created_at)}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                    <Link href="/member/history">
-                      <Button variant="ghost" size="sm" className="text-xs text-slate-600">
-                        Lihat Transkrip
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setConvToDelete(conv)}
-                      className="text-xs text-red-600 hover:bg-red-50 p-2"
-                      title="Hapus riwayat percakapan ini"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         {/* Quick Troubleshooting & Emergency NOC */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
