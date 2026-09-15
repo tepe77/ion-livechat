@@ -139,4 +139,22 @@ class RoutingService
 
         });
     }
+
+    /**
+     * Check if there is at least one active agent online and ready to receive heartbeats.
+     */
+    public function hasOnlineAgents(): bool
+    {
+        return AgentProfile::query()
+            ->join('users', 'users.id', '=', 'agent_profiles.user_id')
+            ->join('agent_statuses', 'agent_statuses.agent_id', '=', 'agent_profiles.user_id')
+            ->where('users.is_active', true)
+            ->where('agent_statuses.presence', AgentPresence::ONLINE->value)
+            ->where(function ($query) {
+                $query->whereNull('agent_statuses.last_seen_at')
+                    ->orWhere('agent_statuses.last_seen_at', '>=', now()->subSeconds(90));
+            })
+            ->exists();
+    }
 }
+

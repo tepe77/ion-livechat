@@ -10,6 +10,8 @@ import { Badge } from "../../components/ui/Badge";
 import { Dialog } from "../../components/ui/Dialog";
 import { MemberProfileDropdown } from "../../components/member/MemberProfileDropdown";
 import { MemberBottomNav } from "../../components/member/MemberBottomNav";
+import { OfflineNoticeModal, type EmergencyContacts } from "../../components/member/OfflineNoticeModal";
+import { getPublicSettings, type SystemSettings } from "../../lib/api/settings";
 import { BrandLogo } from "../../components/ui/BrandLogo";
 import { formatDateTime, formatDate, formatTime } from "../../lib/utils";
 import type { Conversation } from "@ion/types";
@@ -42,6 +44,12 @@ export default function MemberOnboardingPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isStartingChat, setIsStartingChat] = useState<boolean>(false);
 
+  // Offline notice modal state
+  const [showOfflineModal, setShowOfflineModal] = useState<boolean>(false);
+  const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContacts | undefined>(undefined);
+  const [offlineMessage, setOfflineMessage] = useState<string | undefined>(undefined);
+  const [systemSettings, setSystemSettings] = useState<SystemSettings | null>(null);
+
   // Delete dialog state
   const [convToDelete, setConvToDelete] = useState<Conversation | null>(null);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -69,6 +77,11 @@ export default function MemberOnboardingPage() {
       return;
     }
     fetchConversations();
+
+    // Fetch system operational settings & emergency contacts
+    getPublicSettings()
+      .then((data) => setSystemSettings(data))
+      .catch(() => {});
   }, [user, isInitialized, router, fetchConversations]);
 
   const handleStartChat = async () => {
@@ -83,7 +96,13 @@ export default function MemberOnboardingPage() {
       router.push("/member/chat");
     } catch (err: any) {
       console.error("Failed to start conversation", err);
-      alert("Gagal memulai sesi obrolan: " + (err.message || "Periksa koneksi Anda."));
+      if (err.code === "NO_AGENTS_ONLINE" || err.code === "LIVECHAT_DISABLED") {
+        setEmergencyContacts(err.data?.contacts || systemSettings || undefined);
+        setOfflineMessage(err.message);
+        setShowOfflineModal(true);
+      } else {
+        alert("Gagal memulai sesi obrolan: " + (err.message || "Periksa koneksi Anda."));
+      }
     } finally {
       setIsStartingChat(false);
     }
@@ -208,7 +227,9 @@ export default function MemberOnboardingPage() {
               </div>
               <div>
                 <div className="text-[11px] text-slate-400 font-medium">Jam Operasional Layanan</div>
-                <div className="text-xs font-bold text-slate-800">24 Jam / 7 Hari</div>
+                <div className="text-xs font-bold text-slate-800">
+                  {systemSettings?.operational_hours || "24 Jam / 7 Hari"}
+                </div>
               </div>
             </div>
           </div>
@@ -241,8 +262,14 @@ export default function MemberOnboardingPage() {
                     <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
                     Sesi Berjalan (#{activeConv.id})
                   </span>
+                ) : systemSettings?.has_online_agents === false ? (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+                    <span className="h-2 w-2 rounded-full bg-amber-500" />
+                    Offline (Hotline 24 Jam)
+                  </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
                     Teknisi Siap Membantu
                   </span>
                 )}
@@ -450,6 +477,15 @@ export default function MemberOnboardingPage() {
           </div>
         </div>
       </Dialog>
+
+      {/* Offline Notice Modal */}
+      <OfflineNoticeModal
+        isOpen={showOfflineModal}
+        onClose={() => setShowOfflineModal(false)}
+        contacts={emergencyContacts}
+        customerNumber={user?.customer_number}
+        message={offlineMessage}
+      />
 
       {/* Mobile Responsive Bottom Navigation Bar */}
       <MemberBottomNav />

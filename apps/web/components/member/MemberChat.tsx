@@ -10,6 +10,7 @@ import { useAuthStore } from "../../stores/authStore";
 import { Button } from "../ui/Button";
 import { Dialog } from "../ui/Dialog";
 import { MemberRatingDialog } from "./MemberRatingDialog";
+import { compressImage } from "../../lib/imageCompression";
 import {
   Send,
   Paperclip,
@@ -25,6 +26,7 @@ import {
   Wifi,
   ShieldCheck,
   AlertCircle,
+  Loader2,
   X,
 } from "lucide-react";
 
@@ -52,6 +54,7 @@ export function MemberChat({
   const [hasRated, setHasRated] = useState<boolean>(false);
   const [isStartingNew, setIsStartingNew] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isCompressing, setIsCompressing] = useState<boolean>(false);
   const [attachmentMenuOpen, setAttachmentMenuOpen] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -99,7 +102,7 @@ export function MemberChat({
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
@@ -111,14 +114,29 @@ export function MemberChat({
       return;
     }
 
-    // Max 1MB
-    if (file.size > 1024 * 1024) {
-      alert(`Ukuran foto terlalu besar (${(file.size / (1024 * 1024)).toFixed(2)} MB). Maksimal ukuran foto adalah 1MB.`);
-      return;
-    }
-
-    setSelectedFile(file);
     setAttachmentMenuOpen(false);
+
+    try {
+      setIsCompressing(true);
+      // Otomatis kompresi gambar (resize resolusi ekstrem & kompres JPEG agar di bawah 1MB)
+      const processedFile = await compressImage(file);
+
+      if (processedFile.size > 1024 * 1024) {
+        alert(`Ukuran foto setelah kompresi masih melebihi 1MB (${(processedFile.size / (1024 * 1024)).toFixed(2)} MB). Silakan pilih foto lain.`);
+        return;
+      }
+
+      setSelectedFile(processedFile);
+    } catch (err) {
+      console.error("Gagal mengompresi foto:", err);
+      if (file.size > 1024 * 1024) {
+        alert(`Ukuran foto terlalu besar (${(file.size / (1024 * 1024)).toFixed(2)} MB). Maksimal ukuran foto adalah 1MB.`);
+        return;
+      }
+      setSelectedFile(file);
+    } finally {
+      setIsCompressing(false);
+    }
   };
 
   const handleVideoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -610,6 +628,14 @@ export function MemberChat({
 
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Processing / Compressing Banner */}
+      {isCompressing && (
+        <div className="bg-blue-50/95 border-t border-blue-200 px-4 py-2.5 flex items-center gap-2.5 text-xs text-[#1E3785] animate-in fade-in duration-150 shrink-0 shadow-2xs">
+          <Loader2 className="h-4 w-4 animate-spin shrink-0 text-[#1E3785]" />
+          <span className="font-medium">Mengompresi dan mengoptimalkan foto agar di bawah 1MB...</span>
+        </div>
+      )}
 
       {/* Selected File Preview Banner */}
       {selectedFile && (

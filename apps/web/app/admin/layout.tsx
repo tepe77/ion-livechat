@@ -14,6 +14,7 @@ import {
   LogOut,
   Loader2,
   ChevronRight,
+  Settings,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -48,6 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navItems = [
     { label: "Manajemen Pengguna & Peran", href: "/admin/users", icon: Users },
     { label: "Audit Log & Keamanan", href: "/admin/audit-logs", icon: FileText },
+    { label: "Pengaturan Kontak & Sistem", href: "/admin/settings", icon: Settings },
   ];
 
   return (

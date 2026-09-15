@@ -9,6 +9,7 @@ import { MemberChat } from "../../../components/member/MemberChat";
 import { Button } from "../../../components/ui/Button";
 import { MemberProfileDropdown } from "../../../components/member/MemberProfileDropdown";
 import { MemberBottomNav } from "../../../components/member/MemberBottomNav";
+import { OfflineNoticeModal, type EmergencyContacts } from "../../../components/member/OfflineNoticeModal";
 import { BrandLogo } from "../../../components/ui/BrandLogo";
 import type { Conversation } from "@ion/types";
 import {
@@ -36,6 +37,11 @@ export default function MemberChatPage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Offline notice modal state
+  const [showOfflineModal, setShowOfflineModal] = useState<boolean>(false);
+  const [offlineContacts, setOfflineContacts] = useState<EmergencyContacts | undefined>(undefined);
+  const [offlineMessage, setOfflineMessage] = useState<string | undefined>(undefined);
+
   const initChat = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -53,7 +59,13 @@ export default function MemberChatPage() {
       }
     } catch (err: any) {
       console.error("Failed to initialize conversation", err);
-      setError(err.message || "Gagal memulai sesi live chat. Silakan coba kembali.");
+      if (err.code === "NO_AGENTS_ONLINE" || err.code === "LIVECHAT_DISABLED") {
+        setOfflineContacts(err.data?.contacts);
+        setOfflineMessage(err.message);
+        setShowOfflineModal(true);
+      } else {
+        setError(err.message || "Gagal memulai sesi live chat. Silakan coba kembali.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -81,13 +93,19 @@ export default function MemberChatPage() {
       setConversation(newConv);
     } catch (err: any) {
       console.error("Failed to start new conversation", err);
-      setError(err.message || "Gagal memulai sesi live chat baru.");
+      if (err.code === "NO_AGENTS_ONLINE" || err.code === "LIVECHAT_DISABLED") {
+        setOfflineContacts(err.data?.contacts);
+        setOfflineMessage(err.message);
+        setShowOfflineModal(true);
+      } else {
+        setError(err.message || "Gagal memulai sesi live chat baru.");
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (!isInitialized || (isLoading && !conversation)) {
+  if (!isInitialized || (isLoading && !conversation && !showOfflineModal)) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
         <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin mb-3" />
@@ -254,6 +272,18 @@ export default function MemberChatPage() {
           </div>
         ) : null}
       </main>
+
+      {/* Offline Notice Modal */}
+      <OfflineNoticeModal
+        isOpen={showOfflineModal}
+        onClose={() => {
+          setShowOfflineModal(false);
+          router.push("/member");
+        }}
+        contacts={offlineContacts}
+        customerNumber={user?.customer_number}
+        message={offlineMessage}
+      />
 
       {/* Mobile Responsive Bottom Navigation Bar */}
       <MemberBottomNav />

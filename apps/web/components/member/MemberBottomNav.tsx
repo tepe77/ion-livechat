@@ -9,6 +9,7 @@ import { updateProfile } from "../../lib/api/auth";
 import { Dialog } from "../ui/Dialog";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
+import { OfflineNoticeModal, type EmergencyContacts } from "./OfflineNoticeModal";
 import { cn } from "../../lib/utils";
 import {
   Home,
@@ -37,6 +38,11 @@ export function MemberBottomNav() {
 
   const [isStartingChat, setIsStartingChat] = useState(false);
   const [hasActiveChat, setHasActiveChat] = useState(false);
+
+  // Offline notice modal state
+  const [showOfflineModal, setShowOfflineModal] = useState(false);
+  const [offlineContacts, setOfflineContacts] = useState<EmergencyContacts | undefined>(undefined);
+  const [offlineMessage, setOfflineMessage] = useState<string | undefined>(undefined);
 
   // Modals state
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -87,9 +93,15 @@ export function MemberBottomNav() {
         await startConversation();
         router.push("/member/chat");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to start chat from bottom nav", err);
-      router.push("/member/chat");
+      if (err.code === "NO_AGENTS_ONLINE" || err.code === "LIVECHAT_DISABLED") {
+        setOfflineContacts(err.data?.contacts);
+        setOfflineMessage(err.message);
+        setShowOfflineModal(true);
+      } else {
+        router.push("/member/chat");
+      }
     } finally {
       setIsStartingChat(false);
     }
@@ -543,6 +555,15 @@ export function MemberBottomNav() {
           </div>
         </form>
       </Dialog>
+
+      {/* Offline Notice Modal */}
+      <OfflineNoticeModal
+        isOpen={showOfflineModal}
+        onClose={() => setShowOfflineModal(false)}
+        contacts={offlineContacts}
+        customerNumber={user?.customer_number}
+        message={offlineMessage}
+      />
     </>
   );
 }

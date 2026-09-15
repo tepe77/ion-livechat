@@ -15,7 +15,9 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     public message: string,
-    public errors?: Record<string, string[]>
+    public errors?: Record<string, string[]>,
+    public code?: string,
+    public data?: any
   ) {
     super(message);
     this.name = "ApiError";
@@ -86,11 +88,15 @@ export async function apiClient<T>(endpoint: string, options: RequestOptions = {
   if (!response.ok) {
     let errorMessage = "An error occurred";
     let validationErrors: Record<string, string[]> | undefined;
+    let errorCode: string | undefined;
+    let errorDataPayload: any;
 
     try {
       const errorData = await response.json();
       errorMessage = errorData.message || errorMessage;
       validationErrors = errorData.errors;
+      errorCode = errorData.code;
+      errorDataPayload = errorData;
     } catch {
       errorMessage = response.statusText || errorMessage;
     }
@@ -99,7 +105,7 @@ export async function apiClient<T>(endpoint: string, options: RequestOptions = {
       removeAuthToken();
     }
 
-    throw new ApiError(response.status, errorMessage, validationErrors);
+    throw new ApiError(response.status, errorMessage, validationErrors, errorCode, errorDataPayload);
   }
 
   if (response.status === 204) {

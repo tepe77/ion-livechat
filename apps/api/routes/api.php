@@ -8,10 +8,14 @@ use App\Http\Controllers\HealthController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 // Health Check
 Route::get('/health', [HealthController::class, 'health']);
+
+// Public Settings & Emergency Contacts
+Route::get('/settings/public', [SettingController::class, 'publicSettings']);
 
 // Public Authentication Routes
 Route::prefix('auth')->group(function () {
@@ -79,5 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/users/{id}', [AdminController::class, 'updateUser']);
         Route::get('/roles', [AdminController::class, 'roles']);
         Route::get('/audit-logs', [AdminController::class, 'auditLogs']);
+        Route::get('/settings', [SettingController::class, 'index']);
+        Route::put('/settings', [SettingController::class, 'update']);
     });
 });

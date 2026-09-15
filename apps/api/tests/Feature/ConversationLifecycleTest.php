@@ -239,7 +239,7 @@ class ConversationLifecycleTest extends TestCase
         $this->assertEquals('ION-998877', $this->member->fresh()->customer_number);
     }
 
-    public function test_agent_logout_sets_presence_offline_and_subsequent_chat_goes_to_waiting(): void
+    public function test_agent_logout_sets_presence_offline_and_subsequent_chat_returns_no_agents_online(): void
     {
         // 1. Agent logs out
         $logoutResponse = $this->actingAs($this->agent)
@@ -253,16 +253,14 @@ class ConversationLifecycleTest extends TestCase
         $startResponse = $this->actingAs($this->member)
             ->postJson('/api/v1/conversations');
 
-        // 4. Since no agent is online, conversation must be WAITING with no agent assigned
-        $startResponse->assertStatus(201)
-            ->assertJsonPath('data.status', ConversationStatus::WAITING->value)
-            ->assertJsonPath('data.agent', null);
+        // 4. Since no agent is online, system rejects instantly with 422 NO_AGENTS_ONLINE and emergency contacts
+        $startResponse->assertStatus(422)
+            ->assertJsonPath('code', 'NO_AGENTS_ONLINE')
+            ->assertJsonStructure(['code', 'message', 'contacts' => ['hotline_number', 'whatsapp_number']]);
 
-        $conversationId = $startResponse->json('data.id');
-        $this->assertDatabaseHas('conversations', [
-            'id' => $conversationId,
-            'status' => ConversationStatus::WAITING->value,
-            'agent_id' => null,
+        // 5. Verify no orphaned/empty conversation is stored in database
+        $this->assertDatabaseMissing('conversations', [
+            'member_id' => $this->member->id,
         ]);
     }
 }
