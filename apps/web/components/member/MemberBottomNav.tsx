@@ -36,6 +36,11 @@ export function MemberBottomNav() {
   const router = useRouter();
   const { user, updateUser, logout } = useAuthStore();
 
+  // On active chat page, hide bottom nav so message composer has 100% unobstructed bottom screen space
+  if (pathname === "/member/chat") {
+    return null;
+  }
+
   const [isStartingChat, setIsStartingChat] = useState(false);
   const [hasActiveChat, setHasActiveChat] = useState(false);
 

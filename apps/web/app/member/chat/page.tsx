@@ -115,19 +115,19 @@ export default function MemberChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col">
+    <div className="h-[100dvh] max-h-[100dvh] bg-slate-100 flex flex-col overflow-hidden">
       {/* Top Navbar */}
-      <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2.5 flex items-center justify-between sticky top-0 z-40">
-        <div className="flex items-center gap-3">
+      <header className="bg-white border-b border-slate-200 px-3 sm:px-6 py-2.5 flex items-center justify-between shrink-0 z-20">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link href="/member">
             <Button
               variant="ghost"
               size="sm"
-              className="text-slate-600 gap-1.5 text-xs -ml-2 hover:bg-slate-100"
+              className="text-slate-700 hover:text-[#1E3785] gap-1 text-xs -ml-1 sm:-ml-2 hover:bg-slate-100 font-semibold cursor-pointer"
               title="Kembali ke Beranda Pelanggan"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Beranda</span>
+              <span>Beranda</span>
             </Button>
           </Link>
 
@@ -136,11 +136,11 @@ export default function MemberChatPage() {
           <BrandLogo subtitle="Layanan Bantuan Teknis & Pelanggan ISP" />
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link href="/member/history">
-            <Button variant="ghost" size="sm" className="text-slate-600 gap-1.5 text-xs">
+            <Button variant="ghost" size="sm" className="text-slate-600 hover:text-[#1E3785] gap-1.5 text-xs">
               <History className="h-4 w-4 text-slate-500" />
-              <span className="hidden sm:inline">Riwayat Chat</span>
+              <span className="hidden sm:inline font-medium">Riwayat Chat</span>
             </Button>
           </Link>
 
@@ -151,7 +151,7 @@ export default function MemberChatPage() {
       </header>
 
       {/* Main Responsive Desktop & Mobile Stage */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-2 sm:p-4 lg:p-6">
+      <main className="flex-1 min-h-0 w-full max-w-7xl mx-auto p-0 sm:p-4 lg:p-6 flex flex-col overflow-hidden">
         {error ? (
           <div className="max-w-md w-full mx-auto my-12 bg-white p-6 rounded-2xl border border-red-200 text-center space-y-4 shadow-sm">
             <div className="h-12 w-12 rounded-full bg-red-100 text-red-600 mx-auto flex items-center justify-center">
@@ -164,9 +164,9 @@ export default function MemberChatPage() {
             </Button>
           </div>
         ) : conversation ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-[calc(100dvh-9.5rem)] md:h-[calc(100dvh-5.5rem)] pb-16 md:pb-0">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-full min-h-0 flex-1 overflow-hidden">
             {/* Primary Chat Column */}
-            <div className="col-span-12 lg:col-span-8 h-full flex flex-col">
+            <div className="col-span-12 lg:col-span-8 h-full min-h-0 flex flex-col overflow-hidden">
               <MemberChat
                 conversation={conversation}
                 onStartNewChat={handleStartNewChat}
@@ -284,9 +284,6 @@ export default function MemberChatPage() {
         customerNumber={user?.customer_number}
         message={offlineMessage}
       />
-
-      {/* Mobile Responsive Bottom Navigation Bar */}
-      <MemberBottomNav />
     </div>
   );
 }

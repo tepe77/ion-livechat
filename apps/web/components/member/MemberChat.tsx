@@ -364,7 +364,7 @@ export function MemberChat({
   const isWaiting = conversation.status === "waiting";
 
   return (
-    <div className="flex flex-col h-full w-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div className="flex flex-col h-full min-h-0 w-full bg-white sm:rounded-2xl shadow-sm sm:border border-slate-200 overflow-hidden">
       {/* Top Conversation Header */}
       <header className="flex items-center justify-between px-5 py-3.5 bg-white border-b border-slate-200 shrink-0 z-10">
         <div className="flex items-center gap-3.5">
@@ -683,7 +683,7 @@ export function MemberChat({
       )}
 
       {/* Sticky Message Composer or Closed Banner */}
-      <footer className="p-3.5 sm:p-4 bg-white border-t border-slate-200 shrink-0">
+      <footer className="p-2.5 sm:p-4 bg-white border-t border-slate-200 shrink-0 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         {isClosed ? (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-1.5 px-1">
             <div className="text-center sm:text-left">
