@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "../../../stores/authStore";
 import { MemberHistory } from "../../../components/member/MemberHistory";
@@ -28,8 +28,10 @@ import {
   Trash2,
 } from "lucide-react";
 
-export default function MemberHistoryPage() {
+function MemberHistoryContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const convIdParam = searchParams.get("id");
   const { user, isInitialized } = useAuthStore();
   const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -43,19 +45,32 @@ export default function MemberHistoryPage() {
     }
   }, [user, isInitialized, router]);
 
-  const handleSelectConversation = async (conv: Conversation) => {
-    setSelectedConv(conv);
+  const loadConversationDetails = async (id: number) => {
     setLoadingMessages(true);
     try {
-      const fullConv = await getConversation(conv.id);
+      const fullConv = await getConversation(id);
       setSelectedConv(fullConv);
-      const res = await getMessages(conv.id, { limit: 100 });
+      const res = await getMessages(id, { limit: 100 });
       setMessages(res.data.reverse());
     } catch (err) {
       console.error("Failed to load conversation details", err);
     } finally {
       setLoadingMessages(false);
     }
+  };
+
+  // Auto-load conversation if ?id= query param is provided
+  useEffect(() => {
+    if (convIdParam) {
+      const id = Number(convIdParam);
+      if (!isNaN(id) && id > 0) {
+        loadConversationDetails(id);
+      }
+    }
+  }, [convIdParam]);
+
+  const handleSelectConversation = async (conv: Conversation) => {
+    loadConversationDetails(conv.id);
   };
 
   const handleDeleteActiveConv = async () => {
@@ -66,9 +81,9 @@ export default function MemberHistoryPage() {
       if (selectedConv?.id === convToDelete.id) {
         setSelectedConv(null);
         setMessages([]);
+        router.replace("/member/history");
       }
       setConvToDelete(null);
-      // Reload page or let state update
       router.refresh();
     } catch (err: any) {
       console.error("Failed to delete conversation", err);
@@ -116,7 +131,11 @@ export default function MemberHistoryPage() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-6xl w-full mx-auto p-3 sm:p-4 lg:p-6 grid grid-cols-1 md:grid-cols-12 gap-5 pb-20 md:pb-6">
         {/* Left Column: Conversation List */}
-        <div className="md:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-[calc(100dvh-9.5rem)] md:h-[calc(100dvh-5.5rem)] flex flex-col">
+        <div
+          className={`${
+            selectedConv ? "hidden md:flex" : "flex"
+          } md:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-[calc(100dvh-9.5rem)] md:h-[calc(100dvh-5.5rem)] flex-col`}
+        >
           <MemberHistory
             onSelectConversation={handleSelectConversation}
             onStartNewChat={() => router.push("/member/chat")}
@@ -125,19 +144,39 @@ export default function MemberHistoryPage() {
               if (selectedConv?.id === deletedId) {
                 setSelectedConv(null);
                 setMessages([]);
+                router.replace("/member/history");
               }
             }}
           />
         </div>
 
         {/* Right Column: Selected Transcript */}
-        <div className="hidden md:flex md:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-[calc(100dvh-5.5rem)] flex-col">
+        <div
+          className={`${
+            selectedConv ? "flex" : "hidden md:flex"
+          } md:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden h-[calc(100dvh-9.5rem)] md:h-[calc(100dvh-5.5rem)] flex-col`}
+        >
           {selectedConv ? (
             <div className="flex flex-col h-full">
               {/* Detail Header */}
               <div className="p-4 border-b border-slate-100 bg-slate-50/70">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
+                    {/* Mobile Back button to list */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedConv(null);
+                        router.replace("/member/history");
+                      }}
+                      className="md:hidden h-8 px-2 text-xs text-slate-600 gap-1 -ml-1"
+                      title="Kembali ke Daftar Percakapan"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      <span>Daftar</span>
+                    </Button>
+
                     <span className="font-semibold text-sm text-slate-900">
                       Sesi #{selectedConv.id}
                     </span>
@@ -294,5 +333,20 @@ export default function MemberHistoryPage() {
       {/* Mobile Responsive Bottom Navigation Bar */}
       <MemberBottomNav />
     </div>
+  );
+}
+
+export default function MemberHistoryPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+          <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin mb-3" />
+          <p className="text-sm font-medium text-slate-600">Memuat riwayat percakapan...</p>
+        </div>
+      }
+    >
+      <MemberHistoryContent />
+    </Suspense>
   );
 }

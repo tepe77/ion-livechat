@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "../../stores/authStore";
 import { getConversations, startConversation, deleteConversation } from "../../lib/api/conversations";
+import { getMessages } from "../../lib/api/messages";
 import { Button } from "../../components/ui/Button";
 import { Badge } from "../../components/ui/Badge";
 import { Dialog } from "../../components/ui/Dialog";
@@ -15,7 +16,7 @@ import { getPublicSettings, type SystemSettings } from "../../lib/api/settings";
 import { BrandLogo } from "../../components/ui/BrandLogo";
 import { getEcho } from "../../lib/realtime/client";
 import { formatDateTime, formatDate, formatTime } from "../../lib/utils";
-import type { Conversation } from "@ion/types";
+import type { Conversation, Message } from "@ion/types";
 import {
   Headphones,
   History,
@@ -35,6 +36,7 @@ import {
   AlertTriangle,
   Loader2,
   Star,
+  FileText,
 } from "lucide-react";
 
 export default function MemberOnboardingPage() {
@@ -54,6 +56,25 @@ export default function MemberOnboardingPage() {
   // Delete dialog state
   const [convToDelete, setConvToDelete] = useState<Conversation | null>(null);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+  // Transcript viewer dialog state
+  const [activeTranscriptConv, setActiveTranscriptConv] = useState<Conversation | null>(null);
+  const [transcriptMessages, setTranscriptMessages] = useState<Message[]>([]);
+  const [isLoadingTranscript, setIsLoadingTranscript] = useState<boolean>(false);
+
+  const handleOpenTranscript = async (conv: Conversation) => {
+    setActiveTranscriptConv(conv);
+    setIsLoadingTranscript(true);
+    try {
+      const res = await getMessages(conv.id, { limit: 100 });
+      setTranscriptMessages(res.data.reverse());
+    } catch (err) {
+      console.error("Failed to load transcript messages", err);
+      setTranscriptMessages([]);
+    } finally {
+      setIsLoadingTranscript(false);
+    }
+  };
 
   const fetchConversations = useCallback(async () => {
     setIsLoading(true);
@@ -282,19 +303,6 @@ export default function MemberOnboardingPage() {
                     }. Masuk kembali ke ruang chat untuk melanjutkan percakapan.`
                   : "Mulai percakapan bantuan dengan teknisi ISP kami melalui Smart Routing otomatis untuk kendala internet, konfigurasi router WiFi, atau pertanyaan layanan."}
               </p>
-
-              {/* Service information pill */}
-              <div className="mt-5 p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-3">
-                <div className="h-8 w-8 rounded-xl bg-blue-100/60 text-[#1E3785] flex items-center justify-center shrink-0">
-                  <Clock className="h-4 w-4" />
-                </div>
-                <div className="text-xs">
-                  <span className="text-slate-400 font-medium">Jam Operasional Layanan:</span>{" "}
-                  <strong className="text-slate-800 font-semibold">
-                    {systemSettings?.operational_hours || "24 Jam / 7 Hari"}
-                  </strong>
-                </div>
-              </div>
             </div>
 
             <div className="pt-6">
@@ -338,46 +346,52 @@ export default function MemberOnboardingPage() {
                   {pastConversations.slice(0, 3).map((conv) => (
                     <div
                       key={conv.id}
-                      className="py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 hover:bg-slate-50/70 px-2.5 rounded-xl transition-colors"
+                      className="py-3 px-2 rounded-xl hover:bg-slate-50/80 transition-colors space-y-1.5"
                     >
-                      <div className="space-y-1 min-w-0 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-xs font-bold text-slate-900">
+                      {/* Top Row: Nama Agent on left, Buttons on right -> Perfectly aligned */}
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0 flex-wrap">
+                          <span className="text-xs font-bold text-slate-900 truncate">
                             {conv.agent?.name || "Customer Service ION"}
                           </span>
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium shrink-0">
                             Sesi #{conv.id}
                           </span>
                           {conv.rating && (
-                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 shrink-0">
                               <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
                               {conv.rating.rating}/5
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-500 line-clamp-1 truncate">
-                          {conv.latest_message?.content || "Percakapan telah diselesaikan."}
-                        </p>
-                        <div className="text-[10px] text-slate-400">
-                          {formatDateTime(conv.closed_at || conv.created_at)}
+
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleOpenTranscript(conv)}
+                            className="text-xs text-[#1E3785] hover:text-[#162B6B] hover:bg-blue-50/80 h-7 px-2.5 font-medium rounded-lg"
+                          >
+                            Lihat Transkrip
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setConvToDelete(conv)}
+                            className="text-xs text-slate-400 hover:text-red-600 hover:bg-red-50 h-7 w-7 p-0 rounded-lg"
+                            title="Hapus riwayat percakapan ini"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
-                        <Link href="/member/history">
-                          <Button variant="ghost" size="sm" className="text-xs text-slate-600 h-8 px-2.5">
-                            Lihat Transkrip
-                          </Button>
-                        </Link>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setConvToDelete(conv)}
-                          className="text-xs text-red-600 hover:bg-red-50 h-8 w-8 p-0"
-                          title="Hapus riwayat percakapan ini"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                      {/* Bottom Row: Message preview and closed timestamp */}
+                      <p className="text-xs text-slate-500 line-clamp-1 truncate">
+                        {conv.latest_message?.content || "Percakapan telah diselesaikan."}
+                      </p>
+                      <div className="text-[10px] text-slate-400">
+                        Diselesaikan pada {formatDateTime(conv.closed_at || conv.created_at)}
                       </div>
                     </div>
                   ))}
@@ -485,6 +499,110 @@ export default function MemberOnboardingPage() {
               className="text-xs bg-red-600 hover:bg-red-700 text-white shadow-xs"
             >
               Ya, Hapus Riwayat
+            </Button>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Transcript Detail Dialog */}
+      <Dialog
+        isOpen={!!activeTranscriptConv}
+        onClose={() => setActiveTranscriptConv(null)}
+        title={`Transkrip Sesi #${activeTranscriptConv?.id}`}
+        description={
+          activeTranscriptConv?.agent?.name
+            ? `Dilayani oleh ${activeTranscriptConv.agent.name}`
+            : "Transkrip obrolan dengan Customer Service ION"
+        }
+      >
+        <div className="space-y-4">
+          <div className="flex items-center justify-between text-xs bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <div className="text-slate-600">
+              <span>Waktu Selesai: </span>
+              <strong className="text-slate-800 font-medium">
+                {activeTranscriptConv
+                  ? formatDateTime(activeTranscriptConv.closed_at || activeTranscriptConv.created_at)
+                  : "-"}
+              </strong>
+            </div>
+            {activeTranscriptConv?.rating && (
+              <span className="inline-flex items-center gap-1 font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
+                {activeTranscriptConv.rating.rating}/5
+              </span>
+            )}
+          </div>
+
+          <div className="max-h-[380px] overflow-y-auto p-3 space-y-2.5 bg-slate-50/60 rounded-2xl border border-slate-200/80">
+            {isLoadingTranscript ? (
+              <div className="flex flex-col items-center justify-center py-10 space-y-2">
+                <Loader2 className="h-6 w-6 text-[#1E3785] animate-spin" />
+                <p className="text-xs text-slate-500">Memuat transkrip pesan...</p>
+              </div>
+            ) : transcriptMessages.length === 0 ? (
+              <div className="text-center py-10 text-xs text-slate-400">
+                Tidak ada riwayat pesan untuk sesi percakapan ini.
+              </div>
+            ) : (
+              transcriptMessages.map((msg) => {
+                const isUser = msg.sender_id === user?.id;
+                return (
+                  <div
+                    key={msg.id}
+                    className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
+                  >
+                    <div
+                      className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-xs ${
+                        isUser
+                          ? "bg-[#1E3785] text-white rounded-br-xs"
+                          : "bg-white text-slate-800 border border-slate-200 rounded-bl-xs shadow-2xs"
+                      }`}
+                    >
+                      <p className="leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                      {msg.attachments && msg.attachments.length > 0 && (
+                        <div className="mt-1.5 space-y-1 pt-1 border-t border-black/10">
+                          {msg.attachments.map((att: any) => (
+                            <a
+                              key={att.id}
+                              href={att.url || "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1.5 hover:underline font-medium text-[11px]"
+                            >
+                              <FileText className="h-3.5 w-3.5 shrink-0" />
+                              <span className="truncate max-w-[180px]">{att.original_name}</span>
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-slate-400 mt-0.5 px-1">
+                      {formatTime(msg.created_at)}
+                    </span>
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+            <Link
+              href={`/member/history?id=${activeTranscriptConv?.id}`}
+              onClick={() => setActiveTranscriptConv(null)}
+              className="text-xs text-[#1E3785] hover:underline font-medium flex items-center gap-1"
+            >
+              <span>Buka Halaman Riwayat Penuh</span>
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveTranscriptConv(null)}
+              className="text-xs"
+            >
+              Tutup
             </Button>
           </div>
         </div>
