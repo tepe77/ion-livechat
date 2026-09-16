@@ -34,7 +34,8 @@ class AdminController extends Controller
             });
         }
 
-        $users = $query->paginate($request->input('per_page', 20));
+        $perPage = min(max((int) $request->input('per_page', 15), 1), 100);
+        $users = $query->paginate($perPage);
 
         return response()->json([
             'data' => UserResource::collection($users)->resolve(),
@@ -42,6 +43,7 @@ class AdminController extends Controller
                 'current_page' => $users->currentPage(),
                 'per_page' => $users->perPage(),
                 'total' => $users->total(),
+                'last_page' => $users->lastPage(),
             ],
         ]);
     }
@@ -96,7 +98,8 @@ class AdminController extends Controller
             $query->where('actor_id', $request->actor_id);
         }
 
-        $logs = $query->paginate($request->input('per_page', 30));
+        $perPage = min(max((int) $request->input('per_page', 20), 1), 100);
+        $logs = $query->paginate($perPage);
 
         return response()->json([
             'data' => AuditLogResource::collection($logs)->resolve(),
@@ -104,6 +107,7 @@ class AdminController extends Controller
                 'current_page' => $logs->currentPage(),
                 'per_page' => $logs->perPage(),
                 'total' => $logs->total(),
+                'last_page' => $logs->lastPage(),
             ],
         ]);
     }

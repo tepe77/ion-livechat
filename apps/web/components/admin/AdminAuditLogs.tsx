@@ -4,17 +4,31 @@ import React, { useEffect, useState } from "react";
 import type { AuditLog } from "@ion/types";
 import { getAuditLogs } from "../../lib/api/admin";
 import { formatDate, formatTime } from "../../lib/utils";
+import { Pagination } from "../ui/Pagination";
 import { Activity, Clock } from "lucide-react";
 
 export function AdminAuditLogs() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(20);
+  const [totalLogs, setTotalLogs] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
-  useEffect(() => {
-    getAuditLogs({ page: 1 })
-      .then((res) => setLogs(res.data))
+  const fetchAuditLogs = (targetPage = page, targetPerPage = perPage) => {
+    setIsLoading(true);
+    getAuditLogs({ page: targetPage, per_page: targetPerPage })
+      .then((res) => {
+        setLogs(res.data);
+        setTotalLogs(res.meta.total);
+        setTotalPages(res.meta.last_page || Math.ceil(res.meta.total / targetPerPage) || 1);
+      })
       .catch((err) => console.error("Failed to load audit logs", err))
       .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    fetchAuditLogs(1, perPage);
   }, []);
 
   return (
@@ -84,6 +98,26 @@ export function AdminAuditLogs() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          totalItems={totalLogs}
+          perPage={perPage}
+          isLoading={isLoading}
+          theme="purple"
+          onPageChange={(newPage) => {
+            setPage(newPage);
+            fetchAuditLogs(newPage, perPage);
+          }}
+          onPerPageChange={(newPerPage) => {
+            setPerPage(newPerPage);
+            setPage(1);
+            fetchAuditLogs(1, newPerPage);
+          }}
+          perPageOptions={[10, 20, 50, 100]}
+        />
       </div>
     </div>
   );

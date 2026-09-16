@@ -6,6 +6,7 @@ import { getAdminUsers, getRoles, updateAdminUser, type RoleWithPermissions } fr
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { Dialog } from "../ui/Dialog";
+import { Pagination } from "../ui/Pagination";
 import { Search, Shield, CheckCircle, XCircle } from "lucide-react";
 
 export function AdminUsersTable() {
@@ -13,15 +14,28 @@ export function AdminUsersTable() {
   const [roles, setRoles] = useState<RoleWithPermissions[]>([]);
   const [roleFilter, setRoleFilter] = useState<string>("");
   const [search, setSearch] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(15);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const fetchUsers = () => {
+  const fetchUsers = (targetPage = page, targetPerPage = perPage) => {
     setIsLoading(true);
-    getAdminUsers({ role: roleFilter || undefined, search: search || undefined })
-      .then((res) => setUsers(res.data))
+    getAdminUsers({
+      role: roleFilter || undefined,
+      search: search || undefined,
+      page: targetPage,
+      per_page: targetPerPage,
+    })
+      .then((res) => {
+        setUsers(res.data);
+        setTotalUsers(res.meta.total);
+        setTotalPages(res.meta.last_page || Math.ceil(res.meta.total / targetPerPage) || 1);
+      })
       .catch((err) => console.error("Failed to load users", err))
       .finally(() => setIsLoading(false));
   };
@@ -31,7 +45,8 @@ export function AdminUsersTable() {
   }, []);
 
   useEffect(() => {
-    fetchUsers();
+    setPage(1);
+    fetchUsers(1, perPage);
   }, [roleFilter]);
 
   const handleEditRole = (user: User) => {
@@ -78,7 +93,12 @@ export function AdminUsersTable() {
               placeholder="Cari nama atau email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && fetchUsers()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setPage(1);
+                  fetchUsers(1, perPage);
+                }
+              }}
               className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
             />
           </div>
@@ -168,6 +188,26 @@ export function AdminUsersTable() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          totalItems={totalUsers}
+          perPage={perPage}
+          isLoading={isLoading}
+          theme="purple"
+          onPageChange={(newPage) => {
+            setPage(newPage);
+            fetchUsers(newPage, perPage);
+          }}
+          onPerPageChange={(newPerPage) => {
+            setPerPage(newPerPage);
+            setPage(1);
+            fetchUsers(1, newPerPage);
+          }}
+          perPageOptions={[10, 15, 25, 50]}
+        />
       </div>
 
       {/* Edit Role Modal */}

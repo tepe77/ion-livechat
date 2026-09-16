@@ -4,27 +4,38 @@ import React, { useEffect, useState } from "react";
 import type { Conversation } from "@ion/types";
 import { getMonitoredConversations } from "../../lib/api/manager";
 import { Badge } from "../ui/Badge";
+import { Pagination } from "../ui/Pagination";
 import { formatDate, formatTime } from "../../lib/utils";
 import { Filter, Star, Clock } from "lucide-react";
 
 export function ConversationMonitor() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(20);
+  const [totalConversations, setTotalConversations] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchConversations = () => {
+  const fetchConversations = (targetPage = page, targetPerPage = perPage) => {
     setIsLoading(true);
     getMonitoredConversations({
       status: statusFilter || undefined,
-      per_page: 25,
+      page: targetPage,
+      per_page: targetPerPage,
     })
-      .then((res) => setConversations(res.data))
+      .then((res) => {
+        setConversations(res.data);
+        setTotalConversations(res.meta.total);
+        setTotalPages(res.meta.last_page || Math.ceil(res.meta.total / targetPerPage) || 1);
+      })
       .catch((err) => console.error("Failed to load monitored conversations", err))
       .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
-    fetchConversations();
+    setPage(1);
+    fetchConversations(1, perPage);
   }, [statusFilter]);
 
   return (
@@ -128,6 +139,25 @@ export function ConversationMonitor() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          totalItems={totalConversations}
+          perPage={perPage}
+          isLoading={isLoading}
+          onPageChange={(newPage) => {
+            setPage(newPage);
+            fetchConversations(newPage, perPage);
+          }}
+          onPerPageChange={(newPerPage) => {
+            setPerPage(newPerPage);
+            setPage(1);
+            fetchConversations(1, newPerPage);
+          }}
+          perPageOptions={[10, 20, 50]}
+        />
       </div>
     </div>
   );

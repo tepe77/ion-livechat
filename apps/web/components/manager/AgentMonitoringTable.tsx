@@ -8,11 +8,16 @@ import { Button } from "../ui/Button";
 import { Dialog } from "../ui/Dialog";
 import { Input } from "../ui/Input";
 import { formatDuration } from "../../lib/utils";
+import { Pagination } from "../ui/Pagination";
 import { Plus, BarChart2, Star, CheckCircle, XCircle } from "lucide-react";
 
 export function AgentMonitoringTable() {
   const [agents, setAgents] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [page, setPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(15);
+  const [totalAgents, setTotalAgents] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
   const [showPerformanceModal, setShowPerformanceModal] = useState<boolean>(false);
   const [performanceData, setPerformanceData] = useState<AgentPerformance | null>(null);
@@ -25,16 +30,20 @@ export function AgentMonitoringTable() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAgents = () => {
+  const fetchAgents = (targetPage = page, targetPerPage = perPage) => {
     setIsLoading(true);
-    getManagerAgents()
-      .then((res) => setAgents(res.data))
+    getManagerAgents({ page: targetPage, per_page: targetPerPage })
+      .then((res) => {
+        setAgents(res.data);
+        setTotalAgents(res.meta.total);
+        setTotalPages(res.meta.last_page || Math.ceil(res.meta.total / targetPerPage) || 1);
+      })
       .catch((err) => console.error("Failed to load agents", err))
       .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
-    fetchAgents();
+    fetchAgents(1, perPage);
   }, []);
 
   const handleCreateAgent = async (e: React.FormEvent) => {
@@ -180,6 +189,25 @@ export function AgentMonitoringTable() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          totalItems={totalAgents}
+          perPage={perPage}
+          isLoading={isLoading}
+          onPageChange={(newPage) => {
+            setPage(newPage);
+            fetchAgents(newPage, perPage);
+          }}
+          onPerPageChange={(newPerPage) => {
+            setPerPage(newPerPage);
+            setPage(1);
+            fetchAgents(1, newPerPage);
+          }}
+          perPageOptions={[10, 15, 25, 50]}
+        />
       </div>
 
       {/* Create Agent Modal */}

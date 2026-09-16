@@ -8,7 +8,12 @@ export interface RoleWithPermissions {
   permissions: Array<{ id: number; name: string; slug: string }>;
 }
 
-export async function getAdminUsers(params?: { role?: string; search?: string; page?: number }): Promise<ApiPaginatedResponse<User>> {
+export async function getAdminUsers(params?: {
+  role?: string;
+  search?: string;
+  page?: number;
+  per_page?: number;
+}): Promise<ApiPaginatedResponse<User>> {
   return apiClient<ApiPaginatedResponse<User>>("/admin/users", { params: params as any });
 }
 
@@ -28,6 +33,11 @@ export async function getRoles(): Promise<RoleWithPermissions[]> {
   return res.data;
 }
 
-export async function getAuditLogs(params?: { action?: string; actor_id?: number; page?: number }): Promise<ApiPaginatedResponse<AuditLog>> {
+export async function getAuditLogs(params?: {
+  action?: string;
+  actor_id?: number;
+  page?: number;
+  per_page?: number;
+}): Promise<ApiPaginatedResponse<AuditLog>> {
   return apiClient<ApiPaginatedResponse<AuditLog>>("/admin/audit-logs", { params: params as any });
 }

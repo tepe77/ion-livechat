@@ -52,7 +52,8 @@ class ManagerController extends Controller
             $query->whereHas('agentStatus', fn ($q) => $q->where('availability', $request->availability));
         }
 
-        $agents = $query->paginate($request->input('per_page', 20));
+        $perPage = min(max((int) $request->input('per_page', 15), 1), 100);
+        $agents = $query->paginate($perPage);
 
         return response()->json([
             'data' => AgentResource::collection($agents)->resolve(),
@@ -60,6 +61,7 @@ class ManagerController extends Controller
                 'current_page' => $agents->currentPage(),
                 'per_page' => $agents->perPage(),
                 'total' => $agents->total(),
+                'last_page' => $agents->lastPage(),
             ],
         ]);
     }
@@ -180,7 +182,8 @@ class ManagerController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
-        $conversations = $query->paginate($request->input('per_page', 20));
+        $perPage = min(max((int) $request->input('per_page', 20), 1), 100);
+        $conversations = $query->paginate($perPage);
 
         return response()->json([
             'data' => ConversationResource::collection($conversations)->resolve(),
@@ -188,6 +191,7 @@ class ManagerController extends Controller
                 'current_page' => $conversations->currentPage(),
                 'per_page' => $conversations->perPage(),
                 'total' => $conversations->total(),
+                'last_page' => $conversations->lastPage(),
             ],
         ]);
     }

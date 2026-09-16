@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useAuthStore } from "../../stores/authStore";
 import { Button } from "../../components/ui/Button";
 import { BrandLogo } from "../../components/ui/BrandLogo";
+import { AdminProfileDropdown } from "../../components/admin/AdminProfileDropdown";
 import {
   ShieldAlert,
   Users,
   FileText,
   Activity,
-  LogOut,
   Loader2,
   ChevronRight,
   Settings,
@@ -20,7 +20,7 @@ import {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, isInitialized, logout } = useAuthStore();
+  const { user, isInitialized } = useAuthStore();
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -32,11 +32,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       router.push("/login");
     }
   }, [user, isInitialized, router]);
-
-  const handleLogout = async () => {
-    await logout();
-    router.push("/login");
-  };
 
   if (!isInitialized || !user || user.role !== "superadmin") {
     return (
@@ -83,7 +78,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           textClassName="min-w-0 max-w-[140px] xs:max-w-[200px] sm:max-w-none"
         />
 
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Link href="/manager/dashboard">
             <Button variant="outline" size="sm" className="text-xs gap-1.5 px-2 sm:px-3 h-8 whitespace-nowrap">
               <Activity className="h-3.5 w-3.5 text-blue-600 shrink-0" />
@@ -94,27 +89,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <div className="h-4 sm:h-5 w-px bg-slate-200" />
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-purple-100 text-purple-800 font-bold text-xs flex items-center justify-center shrink-0">
-              {user.name.charAt(0)}
-            </div>
-            <div className="hidden md:block text-left">
-              <div className="text-xs font-bold text-slate-800 leading-tight">{user.name}</div>
-              <div className="text-[10px] text-purple-700 uppercase tracking-wider font-semibold">
-                Superadmin
-              </div>
-            </div>
-          </div>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleLogout}
-            className="text-red-600 hover:bg-red-50 h-8 w-8 p-0 shrink-0"
-            title="Keluar"
-          >
-            <LogOut className="h-4 w-4" />
-          </Button>
+          {/* Admin Profile & Settings Dropdown (With embedded logout) */}
+          <AdminProfileDropdown />
         </div>
       </header>
 
