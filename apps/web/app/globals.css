@@ -53,3 +53,12 @@
   background: #CBD5E1;
   border-radius: 9999px;
 }
+
+/* Hide scrollbars for touch-friendly horizontal swipe */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

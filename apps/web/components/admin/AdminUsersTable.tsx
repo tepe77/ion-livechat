@@ -64,14 +64,14 @@ export function AdminUsersTable() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h3 className="text-base font-semibold text-slate-900">Manajemen Pengguna & Hak Akses</h3>
           <p className="text-xs text-slate-500">Kelola pengguna, penetapan peran (RBAC), dan status akun</p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-64">
             <Search className="h-4 w-4 absolute left-3 top-2.5 text-slate-400" />
             <input
               type="text"
@@ -79,14 +79,14 @@ export function AdminUsersTable() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && fetchUsers()}
-              className="pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
+              className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
             />
           </div>
 
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1.5 px-3 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
+            className="w-full sm:w-auto text-xs font-medium rounded-lg border border-slate-200 bg-white py-2 px-3 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
           >
             <option value="">Semua Peran</option>
             <option value="superadmin">Superadmin</option>
@@ -102,11 +102,11 @@ export function AdminUsersTable() {
           <table className="w-full text-left text-xs text-slate-600">
             <thead className="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
               <tr>
-                <th className="px-4 py-3">Nama Pengguna</th>
-                <th className="px-4 py-3">Email</th>
-                <th className="px-4 py-3">Peran (Role)</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3 text-right">Aksi</th>
+                <th className="px-4 py-3 whitespace-nowrap">Nama Pengguna</th>
+                <th className="px-4 py-3 whitespace-nowrap">Email</th>
+                <th className="px-4 py-3 whitespace-nowrap">Peran (Role)</th>
+                <th className="px-4 py-3 whitespace-nowrap">Status</th>
+                <th className="px-4 py-3 text-right whitespace-nowrap">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -125,15 +125,15 @@ export function AdminUsersTable() {
               ) : (
                 users.map((user) => (
                   <tr key={user.id} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="px-4 py-3.5 font-semibold text-slate-900">{user.name}</td>
-                    <td className="px-4 py-3.5 text-slate-600">{user.email}</td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5 font-semibold text-slate-900 whitespace-nowrap">{user.name}</td>
+                    <td className="px-4 py-3.5 text-slate-600 whitespace-nowrap">{user.email}</td>
+                    <td className="px-4 py-3.5 whitespace-nowrap">
                       <span className="inline-flex items-center gap-1 font-medium capitalize bg-slate-100 px-2 py-0.5 rounded text-slate-700">
                         <Shield className="h-3 w-3 text-[#1E3785]" />
                         {user.role}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
                       {user.is_active ? (
                         <span className="text-emerald-600 flex items-center gap-1 font-medium">
                           <CheckCircle className="h-3.5 w-3.5" /> Aktif
@@ -144,12 +144,12 @@ export function AdminUsersTable() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3.5 text-right space-x-2">
+                    <td className="px-4 py-3.5 text-right whitespace-nowrap space-x-1.5 sm:space-x-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleEditRole(user)}
-                        className="text-xs"
+                        className="text-xs whitespace-nowrap h-8"
                       >
                         Ubah Role
                       </Button>
@@ -157,7 +157,7 @@ export function AdminUsersTable() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleToggleActive(user)}
-                        className={user.is_active ? "text-red-600" : "text-emerald-600"}
+                        className={`text-xs whitespace-nowrap h-8 ${user.is_active ? "text-red-600" : "text-emerald-600"}`}
                       >
                         {user.is_active ? "Nonaktifkan" : "Aktifkan"}
                       </Button>

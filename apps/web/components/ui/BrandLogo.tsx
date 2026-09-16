@@ -4,7 +4,7 @@ import { cn } from "../../lib/utils";
 export interface BrandLogoProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   showText?: boolean;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   className?: string;
   textClassName?: string;
   textColor?: "dark" | "white";

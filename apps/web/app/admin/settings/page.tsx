@@ -90,13 +90,13 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2.5">
-            <h1 className="text-xl font-bold text-slate-900">Pengaturan Kontak Darurat & Operasional</h1>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900">Pengaturan Kontak Darurat & Operasional</h1>
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200 whitespace-nowrap">
               Superadmin Only
             </span>
           </div>
@@ -106,7 +106,7 @@ export default function AdminSettingsPage() {
         </div>
 
         {/* Live Agent Status Indicator */}
-        <div className="flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200/90 self-start sm:self-auto">
+        <div className="flex items-center gap-3 bg-slate-50 px-3.5 sm:px-4 py-2.5 rounded-xl border border-slate-200/90 w-full sm:w-auto shrink-0">
           <div className="relative flex items-center justify-center">
             <span
               className={`h-3 w-3 rounded-full ${
@@ -143,9 +143,9 @@ export default function AdminSettingsPage() {
       )}
 
       {/* Main Grid: Form Settings & Live Preview */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
         {/* Left Column: Form Settings (7 cols) */}
-        <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-6">
+        <div className="lg:col-span-7 bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-5 sm:space-y-6">
           <form onSubmit={handleSave} className="space-y-5">
             {/* Livechat Master Switch */}
             <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between">
@@ -256,16 +256,16 @@ export default function AdminSettingsPage() {
               <Button
                 type="submit"
                 disabled={isSaving}
-                className="w-full sm:w-auto bg-[#1E3785] hover:bg-[#162B6B] text-white font-semibold text-xs px-6 py-2.5 rounded-xl shadow-xs gap-2"
+                className="w-full sm:w-auto bg-[#1E3785] hover:bg-[#162B6B] text-white font-semibold text-xs px-6 py-2.5 rounded-xl shadow-xs gap-2 min-h-[44px] h-auto whitespace-nowrap"
               >
                 {isSaving ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0" />
                     <span>Menyimpan Pengaturan...</span>
                   </>
                 ) : (
                   <>
-                    <Save className="h-4 w-4" />
+                    <Save className="h-4 w-4 shrink-0" />
                     <span>Simpan Perubahan Pengaturan</span>
                   </>
                 )}
@@ -276,7 +276,7 @@ export default function AdminSettingsPage() {
 
         {/* Right Column: Live Interactive Preview (5 cols) */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+          <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Eye className="h-4 w-4 text-purple-700" />
