@@ -37,7 +37,7 @@ services:
       - ion-network
 
   api:
-    image: ion-livechat-api:latest
+    image: ${IMAGE_API:-ghcr.io/tepe77/ion-livechat-api:latest}
     build:
       context: .
       dockerfile: infrastructure/docker/api/Dockerfile
@@ -87,7 +87,7 @@ services:
       - ion-network
 
   reverb:
-    image: ion-livechat-api:latest
+    image: ${IMAGE_API:-ghcr.io/tepe77/ion-livechat-api:latest}
     container_name: ion_reverb
     restart: unless-stopped
     command: ["reverb"]
@@ -121,7 +121,7 @@ services:
       - ion-network
 
   queue:
-    image: ion-livechat-api:latest
+    image: ${IMAGE_API:-ghcr.io/tepe77/ion-livechat-api:latest}
     container_name: ion_queue
     restart: unless-stopped
     command: ["queue"]
@@ -148,7 +148,7 @@ services:
       - ion-network
 
   scheduler:
-    image: ion-livechat-api:latest
+    image: ${IMAGE_API:-ghcr.io/tepe77/ion-livechat-api:latest}
     container_name: ion_scheduler
     restart: unless-stopped
     command: ["scheduler"]
@@ -175,7 +175,7 @@ services:
       - ion-network
 
   web:
-    image: ion-livechat-web:latest
+    image: ${IMAGE_WEB:-ghcr.io/tepe77/ion-livechat-web:latest}
     build:
       context: .
       dockerfile: infrastructure/docker/web/Dockerfile

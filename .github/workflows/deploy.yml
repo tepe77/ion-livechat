@@ -1,0 +1,111 @@
+name: Auto Deploy to Antares VM
+
+on:
+  push:
+    branches:
+      - main
+
+# Hindari deploy bentrok jika ada multiple push berturut-turut
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_API: ghcr.io/${{ github.repository_owner }}/ion-livechat-api
+  IMAGE_WEB: ghcr.io/${{ github.repository_owner }}/ion-livechat-web
+
+jobs:
+  # Tahap 1: Build Docker Images di Cloud GitHub Runner (Bukan di Server VM)
+  build-and-push:
+    name: Build & Push Images to GHCR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build & Push Image API (Laravel)
+      - name: Build & Push API Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./infrastructure/docker/api/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_API }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Build & Push Image Web (Next.js)
+      - name: Build & Push Web Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./infrastructure/docker/web/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_WEB }}:latest
+          build-args: |
+            NEXT_PUBLIC_API_URL=/api/v1
+            NEXT_PUBLIC_REVERB_KEY=ionlivechatkey
+            NEXT_PUBLIC_REVERB_HOST=livechat.zayra.web.id
+            NEXT_PUBLIC_REVERB_PORT=443
+            NEXT_PUBLIC_REVERB_SCHEME=https
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Tahap 2: Deploy Cepat ke VM Antares via SSH (Tanpa Beban Kompilasi CPU)
+  deploy:
+    name: Pull & Rolling Restart on VM Antares
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH and Deploy to Antares VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: ${{ secrets.VM_PORT || 22 }}
+          script_stop: true
+          script: |
+            echo "==> Masuk ke direktori aplikasi di VM Antares..."
+            cd /home/ion-livechat
+
+            echo "==> Mengupdate file konfigurasi docker-compose dan repo lokal..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "==> Login GHCR di VM Antares..."
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            echo "==> Mengunduh (Pull) image pre-built dari GitHub Container Registry..."
+            docker compose pull
+
+            echo "==> Merestart container aplikasi secara teratur (Database & Redis tetap aktif)..."
+            docker compose up -d --remove-orphans web api reverb queue scheduler
+
+            echo "==> Menjalankan migrasi database produksi secara aman..."
+            docker compose exec -T api php artisan migrate --force
+
+            echo "==> Mengoptimasi konfigurasi & cache Laravel..."
+            docker compose exec -T api php artisan config:cache
+            docker compose exec -T api php artisan route:cache
+
+            echo "==> Membersihkan layer image usang agar storage VM tidak penuh..."
+            docker image prune -f
+
+            echo "==> Deployment Selesai Sukses!"
