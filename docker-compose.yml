@@ -1,8 +1,15 @@
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "20m"
+    max-file: "3"
+
 services:
   postgres:
     image: postgres:16-alpine
     container_name: ion_postgres
     restart: unless-stopped
+    logging: *default-logging
     environment:
       POSTGRES_DB: ${DB_DATABASE:-ion_livechat}
       POSTGRES_USER: ${DB_USERNAME:-ion_user}
@@ -23,6 +30,7 @@ services:
     image: redis:7-alpine
     container_name: ion_redis
     restart: unless-stopped
+    logging: *default-logging
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis_data:/data
@@ -43,6 +51,7 @@ services:
       dockerfile: infrastructure/docker/api/Dockerfile
     container_name: ion_api
     restart: unless-stopped
+    logging: *default-logging
     environment:
       CONTAINER_ROLE: app
       APP_ENV: ${APP_ENV:-production}
@@ -90,6 +99,7 @@ services:
     image: ${IMAGE_API:-ghcr.io/tepe77/ion-livechat-api:latest}
     container_name: ion_reverb
     restart: unless-stopped
+    logging: *default-logging
     command: ["reverb"]
     environment:
       CONTAINER_ROLE: reverb
@@ -124,6 +134,7 @@ services:
     image: ${IMAGE_API:-ghcr.io/tepe77/ion-livechat-api:latest}
     container_name: ion_queue
     restart: unless-stopped
+    logging: *default-logging
     command: ["queue"]
     environment:
       CONTAINER_ROLE: queue
@@ -151,6 +162,7 @@ services:
     image: ${IMAGE_API:-ghcr.io/tepe77/ion-livechat-api:latest}
     container_name: ion_scheduler
     restart: unless-stopped
+    logging: *default-logging
     command: ["scheduler"]
     environment:
       CONTAINER_ROLE: scheduler
@@ -187,6 +199,7 @@ services:
         NEXT_PUBLIC_REVERB_SCHEME: ${PUBLIC_SCHEME:-https}
     container_name: ion_web
     restart: unless-stopped
+    logging: *default-logging
     environment:
       NODE_ENV: production
       PORT: 3000
@@ -204,6 +217,7 @@ services:
     image: nginx:alpine
     container_name: ion_nginx
     restart: unless-stopped
+    logging: *default-logging
     ports:
       - "127.0.0.1:${HTTP_PORT:-8888}:80"
     volumes:

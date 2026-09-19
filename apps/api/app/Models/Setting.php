@@ -54,6 +54,10 @@ class Setting extends Model
                 'whatsapp_template' => 'Halo Tim ION Broadband, saya ingin melaporkan kendala koneksi internet pada nomor pelanggan saya.',
                 'operational_hours' => 'Senin - Minggu, 08:00 - 22:00 WIB',
                 'livechat_enabled' => '1',
+                'retention_audit_logs_days' => '90',
+                'retention_attachments_days' => '60',
+                'auto_prune_enabled' => '1',
+                'last_pruned_at' => '',
             ];
 
             $saved = static::pluck('value', 'key')->toArray();

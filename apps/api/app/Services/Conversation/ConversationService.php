@@ -19,6 +19,7 @@ use App\Services\Routing\RoutingService;
 use App\Services\Routing\WaitingQueueService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
@@ -208,6 +209,13 @@ class ConversationService
                 ConversationAssignment::where('conversation_id', $conversationId)
                     ->whereNull('unassigned_at')
                     ->update(['unassigned_at' => now()]);
+            }
+
+            // Clean up any uploaded attachment files on disk for this conversation
+            try {
+                Storage::disk('public')->deleteDirectory('attachments/' . $conversationId);
+            } catch (\Throwable $e) {
+                Log::warning("Failed to delete attachments directory for conversation {$conversationId}: " . $e->getMessage());
             }
 
             $conversation->delete();

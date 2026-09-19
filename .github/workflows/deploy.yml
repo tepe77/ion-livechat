@@ -96,7 +96,7 @@ jobs:
             docker compose pull
 
             echo "==> Merestart container aplikasi secara teratur (Database & Redis tetap aktif)..."
-            docker compose up -d --remove-orphans web api reverb queue scheduler
+            docker compose up -d --remove-orphans web api reverb queue scheduler nginx
 
             echo "==> Menjalankan migrasi database produksi secara aman..."
             docker compose exec -T api php artisan migrate --force

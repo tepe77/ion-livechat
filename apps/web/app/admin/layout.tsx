@@ -15,6 +15,7 @@ import {
   Loader2,
   ChevronRight,
   Settings,
+  HardDrive,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -59,6 +60,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       shortLabel: "Pengaturan Sistem",
       href: "/admin/settings",
       icon: Settings,
+    },
+    {
+      label: "Penyimpanan & Retensi",
+      shortLabel: "Penyimpanan",
+      href: "/admin/storage",
+      icon: HardDrive,
     },
   ];
 

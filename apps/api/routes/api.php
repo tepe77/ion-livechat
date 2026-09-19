@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\StorageController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AuthController;
@@ -85,5 +86,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/audit-logs', [AdminController::class, 'auditLogs']);
         Route::get('/settings', [SettingController::class, 'index']);
         Route::put('/settings', [SettingController::class, 'update']);
+
+        // Storage & Retention Management
+        Route::get('/storage/metrics', [StorageController::class, 'metrics']);
+        Route::put('/storage/settings', [StorageController::class, 'updateSettings']);
+        Route::post('/storage/prune', [StorageController::class, 'prune']);
     });
 });
