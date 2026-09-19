@@ -38,7 +38,7 @@ export function BrandLogo({
     <div className={cn("flex items-center gap-3", className)}>
       <div
         className={cn(
-          "bg-[#1E3785] text-white flex items-center justify-center shadow-xs shrink-0 relative overflow-hidden",
+          "bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white flex items-center justify-center shadow-xs shrink-0 relative overflow-hidden",
           iconSizeClass
         )}
       >

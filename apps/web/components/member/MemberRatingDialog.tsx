@@ -79,7 +79,7 @@ export function MemberRatingDialog({
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Tuliskan pengalaman Anda..."
-            className="w-full rounded-lg border border-slate-300 p-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:border-[#1E3785] focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
+            className="w-full rounded-lg border border-slate-300 p-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:border-[#1E4ED8] focus:outline-none focus:ring-1 focus:ring-[#1E4ED8]"
           />
         </div>
 

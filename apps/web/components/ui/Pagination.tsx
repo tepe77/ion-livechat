@@ -73,12 +73,12 @@ export function Pagination({
   const activeColor =
     theme === "purple"
       ? "bg-purple-700 text-white border-purple-700 font-bold shadow-xs"
-      : "bg-[#1E3785] text-white border-[#1E3785] font-bold shadow-xs";
+      : "bg-[#1E4ED8] text-white border-[#1E4ED8] font-bold shadow-xs";
 
   const hoverColor =
     theme === "purple"
       ? "hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200"
-      : "hover:bg-blue-50 hover:text-[#1E3785] hover:border-blue-200";
+      : "hover:bg-blue-50 hover:text-[#1E4ED8] hover:border-blue-200";
 
   return (
     <div
@@ -110,7 +110,7 @@ export function Pagination({
               value={perPage}
               onChange={(e) => onPerPageChange(Number(e.target.value))}
               disabled={isLoading}
-              className="text-xs font-semibold rounded-lg border border-slate-200 bg-white py-1 px-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E3785] cursor-pointer"
+              className="text-xs font-semibold rounded-lg border border-slate-200 bg-white py-1 px-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E4ED8] cursor-pointer"
             >
               {perPageOptions.map((opt) => (
                 <option key={opt} value={opt}>

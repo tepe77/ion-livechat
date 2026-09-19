@@ -74,6 +74,10 @@ export function ManagerDashboard({ onNavigateTab }: ManagerDashboardProps) {
     channel.listen(".conversation.closed", () => fetchAllData());
     channel.listen(".agent.status.updated", () => fetchAllData());
 
+    channel.error((error: any) => {
+      console.warn("[ManagerDashboard] Reverb private channel 'manager.dashboard' error:", error);
+    });
+
     return () => {
       channel.stopListening(".dashboard.updated");
       channel.stopListening(".conversation.created");
@@ -141,10 +145,10 @@ export function ManagerDashboard({ onNavigateTab }: ManagerDashboardProps) {
 
           <button
             onClick={fetchAllData}
-            className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-[#1E3785] bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 shadow-2xs transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-[#1E4ED8] bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 shadow-2xs transition-colors cursor-pointer"
             title="Perbarui data metrik"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin text-[#1E3785]" : ""}`} />
+            <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin text-[#1E4ED8]" : ""}`} />
             <span className="hidden sm:inline">Refresh</span>
           </button>
         </div>
@@ -193,13 +197,13 @@ export function ManagerDashboard({ onNavigateTab }: ManagerDashboardProps) {
             <div>
               <p className="text-xs font-semibold text-slate-500">Chat Sedang Aktif</p>
               <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-3xl font-extrabold text-[#1E3785] tracking-tight">
+                <span className="text-3xl font-extrabold text-[#1E4ED8] tracking-tight">
                   {stats?.active ?? 0}
                 </span>
                 <span className="text-[11px] text-slate-500">sesi</span>
               </div>
             </div>
-            <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-[#1E3785]">
+            <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-[#1E4ED8]">
               <MessageSquare className="h-5 w-5" />
             </div>
           </div>
@@ -369,7 +373,7 @@ export function ManagerDashboard({ onNavigateTab }: ManagerDashboardProps) {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Users className="h-4 w-4 text-[#1E3785]" />
+                <Users className="h-4 w-4 text-[#1E4ED8]" />
                 Roster Kehadiran & Beban Kerja Agen
               </h3>
               <p className="text-[11px] text-slate-500">
@@ -380,7 +384,7 @@ export function ManagerDashboard({ onNavigateTab }: ManagerDashboardProps) {
               variant="outline"
               size="sm"
               onClick={() => onNavigateTab?.("agents")}
-              className="text-xs text-[#1E3785] border-blue-200 hover:bg-blue-50"
+              className="text-xs text-[#1E4ED8] border-blue-200 hover:bg-blue-50"
             >
               Kelola Agen <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
@@ -413,7 +417,7 @@ export function ManagerDashboard({ onNavigateTab }: ManagerDashboardProps) {
                             className="h-9 w-9 rounded-xl object-cover border border-slate-200"
                           />
                         ) : (
-                          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-[#1E3785] to-blue-700 text-white font-bold text-xs flex items-center justify-center">
+                          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center">
                             {agent.name?.slice(0, 2).toUpperCase()}
                           </div>
                         )}
@@ -554,13 +558,13 @@ export function ManagerDashboard({ onNavigateTab }: ManagerDashboardProps) {
       {/* 4. SLA & Smart Routing Transparency Guide */}
       <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-slate-600">
         <div className="flex items-start gap-3">
-          <Info className="h-5 w-5 text-[#1E3785] shrink-0 mt-0.5" />
+          <Info className="h-5 w-5 text-[#1E4ED8] shrink-0 mt-0.5" />
           <div className="space-y-0.5">
             <span className="font-bold text-slate-800">
               Standar Layanan & Smart Routing ION Broadband Livechat
             </span>
             <p className="text-[11px] text-slate-500 leading-relaxed">
-              Algoritma Smart Routing secara otomatis mengalokasikan pelanggan ke agen online dengan beban obrolan terendah (*Workload First*). Target SLA: Respon Pertama &lt; 60 detik, Resolusi Selesai 5–15 menit, dan CSAT &ge; 4.5/5.0.
+              Algoritma Smart Routing secara otomatis mengalokasikan pelanggan ke agen online dengan beban obrolan terendah (*Workload First*). Target SLA: Respon Pertama &lt; 60 detik, Resolusi Selesai 5 sampai 15 menit, dan CSAT &ge; 4.5/5.0.
             </p>
           </div>
         </div>

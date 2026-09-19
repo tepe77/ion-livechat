@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!isInitialized || !user || user.role !== "superadmin") {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[#1E4ED8] animate-spin" />
       </div>
     );
   }
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
       {/* Admin Top Header */}
-      <header className="bg-white border-b border-slate-200 px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between sticky top-0 z-40 gap-2">
+      <header className="bg-white border-b border-slate-200 px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between sticky top-0 z-40 gap-2">
         <BrandLogo
           size="sm"
           subtitle={
@@ -95,7 +95,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </header>
 
       {/* Admin Navigation Tabs */}
-      <div className="bg-white border-b border-slate-200 px-3 sm:px-6 overflow-x-auto no-scrollbar scroll-smooth">
+      <div className="bg-white border-b border-slate-200 px-3.5 sm:px-6 lg:px-8 overflow-x-auto no-scrollbar scroll-smooth">
         <nav className="flex space-x-2 sm:space-x-6 min-w-max">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -120,7 +120,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Main Admin Content */}
-      <main className="flex-1 p-3.5 sm:p-5 md:p-6 max-w-7xl w-full mx-auto">{children}</main>
+      <main className="flex-1 p-3.5 sm:p-6 lg:p-8 w-full">{children}</main>
     </div>
   );
 }

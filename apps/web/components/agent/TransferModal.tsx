@@ -92,7 +92,7 @@ export function TransferModal({
                 onClick={() => setSelectedAgentId(agent.id)}
                 className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
                   selectedAgentId === agent.id
-                    ? "border-[#1E3785] bg-[#1E3785]/5 text-[#1E3785]"
+                    ? "border-[#1E4ED8] bg-[#1E4ED8]/5 text-[#1E4ED8]"
                     : "border-slate-200 hover:bg-slate-50 text-slate-800"
                 }`}
               >
@@ -106,7 +106,7 @@ export function TransferModal({
                   </div>
                 </div>
 
-                {selectedAgentId === agent.id && <UserCheck className="h-4 w-4 text-[#1E3785]" />}
+                {selectedAgentId === agent.id && <UserCheck className="h-4 w-4 text-[#1E4ED8]" />}
               </div>
             ))}
           </div>

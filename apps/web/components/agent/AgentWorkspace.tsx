@@ -560,7 +560,7 @@ export function AgentWorkspace() {
             <select
               value={status?.availability || "available"}
               onChange={(e) => handleStatusChange(e.target.value as AgentAvailability)}
-              className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1 px-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
+              className="text-xs font-medium rounded-lg border border-slate-200 bg-white py-1 px-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1E4ED8]"
             >
               <option value="available">🟢 Available</option>
               <option value="away">🟡 Away</option>
@@ -596,7 +596,7 @@ export function AgentWorkspace() {
                   className={cn(
                     "p-3 rounded-xl border transition-all cursor-pointer",
                     isSelected
-                      ? "bg-[#1E3785]/5 border-[#1E3785] text-[#1E3785]"
+                      ? "bg-[#1E4ED8]/5 border-[#1E4ED8] text-[#1E4ED8]"
                       : "bg-white border-slate-200 hover:bg-slate-50 text-slate-800"
                   )}
                 >
@@ -608,7 +608,7 @@ export function AgentWorkspace() {
                       {unreadCount > 0 && (
                         <span
                           title={`${unreadCount} pesan baru`}
-                          className="h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full bg-[#1E3785] text-white text-[11px] font-bold shrink-0 shadow-xs"
+                          className="h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full bg-[#FF6B00] text-white text-[11px] font-bold shrink-0 shadow-xs"
                         >
                           {unreadCount}
                         </span>
@@ -725,7 +725,7 @@ export function AgentWorkspace() {
                       className={cn(
                         "rounded-2xl px-4 py-2.5 text-sm shadow-xs break-words",
                         isMe
-                          ? "bg-[#1E3785] text-white rounded-tr-xs"
+                          ? "bg-[#1E4ED8] text-white rounded-tr-xs"
                           : "bg-white text-slate-900 border border-slate-200 rounded-tl-xs"
                       )}
                     >
@@ -836,8 +836,8 @@ export function AgentWorkspace() {
 
             {/* Processing / Compressing Banner */}
             {isCompressing && (
-              <div className="bg-blue-50/95 border-t border-blue-200 px-4 py-2.5 flex items-center gap-2.5 text-xs text-[#1E3785] animate-in fade-in duration-150 shrink-0 shadow-2xs">
-                <Loader2 className="h-4 w-4 animate-spin shrink-0 text-[#1E3785]" />
+              <div className="bg-blue-50/95 border-t border-blue-200 px-4 py-2.5 flex items-center gap-2.5 text-xs text-[#1E4ED8] animate-in fade-in duration-150 shrink-0 shadow-2xs">
+                <Loader2 className="h-4 w-4 animate-spin shrink-0 text-[#1E4ED8]" />
                 <span className="font-medium">Mengompresi dan mengoptimalkan foto agar di bawah 1MB...</span>
               </div>
             )}
@@ -851,7 +851,7 @@ export function AgentWorkspace() {
                       {previewUrl ? (
                         <img src={previewUrl} alt="Preview" className="h-full w-full object-cover" />
                       ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-blue-50 text-[#1E3785]">
+                        <div className="h-full w-full flex items-center justify-center bg-blue-50 text-[#1E4ED8]">
                           <ImageIcon className="h-4 w-4" />
                         </div>
                       )}
@@ -913,7 +913,7 @@ export function AgentWorkspace() {
                     onClick={() => setAttachmentMenuOpen((prev) => !prev)}
                     className={cn(
                       "text-slate-500 hover:text-slate-700 shrink-0 h-10 w-10 rounded-xl transition-all",
-                      attachmentMenuOpen && "bg-blue-100 text-[#1E3785] ring-2 ring-[#1E3785]/20"
+                      attachmentMenuOpen && "bg-blue-100 text-[#1E4ED8] ring-2 ring-[#1E4ED8]/20"
                     )}
                     aria-label="Lampirkan foto atau video"
                   >
@@ -936,11 +936,11 @@ export function AgentWorkspace() {
                           }}
                           className="w-full flex items-center gap-3 px-2.5 py-2 rounded-xl text-left hover:bg-blue-50 transition-colors group cursor-pointer"
                         >
-                          <div className="h-8 w-8 rounded-lg bg-blue-100 text-[#1E3785] group-hover:bg-[#1E3785] group-hover:text-white flex items-center justify-center transition-colors shrink-0">
+                          <div className="h-8 w-8 rounded-lg bg-blue-100 text-[#1E4ED8] group-hover:bg-[#1E4ED8] group-hover:text-white flex items-center justify-center transition-colors shrink-0">
                             <ImageIcon className="h-4 w-4" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs font-semibold text-slate-800 group-hover:text-[#1E3785]">Foto / Gambar</div>
+                            <div className="text-xs font-semibold text-slate-800 group-hover:text-[#1E4ED8]">Foto / Gambar</div>
                             <div className="text-[10px] text-slate-400">JPG, PNG, WEBP (Maks. 1MB)</div>
                           </div>
                         </button>
@@ -971,7 +971,7 @@ export function AgentWorkspace() {
                   value={inputContent}
                   onChange={handleInputChange}
                   placeholder="Ketik balasan untuk pelanggan..."
-                  className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 sm:px-4 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1E3785] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1E3785]"
+                  className="flex-1 rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 sm:px-4 sm:py-2.5 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#1E4ED8] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1E4ED8]"
                 />
 
                 <Button
@@ -1003,7 +1003,7 @@ export function AgentWorkspace() {
           </>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <div className="h-16 w-16 rounded-full bg-[#1E3785]/10 text-[#1E3785] flex items-center justify-center mb-4">
+            <div className="h-16 w-16 rounded-full bg-[#1E4ED8]/10 text-[#1E4ED8] flex items-center justify-center mb-4">
               <Headphones className="h-8 w-8" />
             </div>
             <h3 className="text-base font-semibold text-slate-800">Workspace CS ION Broadband Livechat</h3>

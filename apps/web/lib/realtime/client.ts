@@ -89,7 +89,7 @@ export function getEcho(): Echo<"reverb"> | null {
       broadcaster: "reverb",
       key,
       wsHost: host,
-      wsPort: isTls ? 443 : port,
+      wsPort: isTls ? 80 : port,
       wssPort: isTls ? port : 443,
       forceTLS: isTls,
       enabledTransports: ["ws", "wss"],
@@ -176,8 +176,9 @@ export function getEcho(): Echo<"reverb"> | null {
         }, 3000);
       });
       pusher.connection.bind("error", (err: any) => {
-        console.warn("Realtime WebSocket error:", err);
-        useRealtimeStore.getState().setError(err?.error?.data?.message || err?.message || "Koneksi realtime terputus");
+        const errorMsg = err?.error?.data?.message || err?.message || (typeof err === "string" ? err : "Koneksi realtime terputus");
+        console.warn("[Realtime] WebSocket connection error:", errorMsg, err);
+        useRealtimeStore.getState().setError(errorMsg);
         setTimeout(() => {
           if (pusher.connection.state !== "connected" && pusher.connection.state !== "connecting") {
             pusher.connect();
@@ -219,11 +220,13 @@ export function disconnectEcho(): void {
       // Ignore cleanup error
     }
     echoInstance = null;
-    useRealtimeStore.getState().setStatus("disconnected");
   }
+  useRealtimeStore.getState().setStatus("disconnected");
 }
 
 export function reconnectEcho(): Echo<"reverb"> | null {
   disconnectEcho();
+  useRealtimeStore.getState().setStatus("connecting");
+  useRealtimeStore.getState().setError(null);
   return getEcho();
 }

@@ -169,7 +169,7 @@ export function LoginForm() {
             onClick={() => quickFill("member1@ion.test")}
             className="flex items-center gap-2 p-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800 text-left"
           >
-            <User className="h-4 w-4 text-[#1E3785]" />
+            <User className="h-4 w-4 text-[#1E4ED8]" />
             <div className="truncate">
               <p className="font-semibold truncate">Member Budi</p>
               <p className="text-[10px] text-slate-400">Customer</p>

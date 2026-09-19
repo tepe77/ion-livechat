@@ -201,7 +201,7 @@ export default function MemberOnboardingPage() {
   if (!isInitialized || (isLoading && conversations.length === 0)) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin mb-3" />
+        <Loader2 className="h-8 w-8 text-[#1E4ED8] animate-spin mb-3" />
         <p className="text-sm font-medium text-slate-600">Memuat portal ION Broadband Livechat...</p>
       </div>
     );
@@ -212,7 +212,7 @@ export default function MemberOnboardingPage() {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
       {/* Top Navbar */}
-      <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2.5 flex items-center justify-between sticky top-0 z-40">
+      <header className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between sticky top-0 z-40">
         <BrandLogo subtitle="Portal Pelanggan & Bantuan Teknis" />
 
         <div className="flex items-center gap-3">
@@ -230,9 +230,9 @@ export default function MemberOnboardingPage() {
       </header>
 
       {/* Main Content Body */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-24 md:pb-8">
+      <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 space-y-6 pb-24 md:pb-8">
         {/* Welcome Greeting Banner */}
-        <section className="bg-gradient-to-r from-[#1E3785] via-blue-900 to-indigo-950 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+        <section className="bg-gradient-to-r from-[#0F2B5B] via-[#1E4ED8] to-[#0F2B5B] rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
           <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 rounded-full bg-white/5 blur-2xl pointer-events-none" />
           <div className="relative z-10 max-w-2xl space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-medium text-blue-100">
@@ -260,7 +260,7 @@ export default function MemberOnboardingPage() {
             className={`group relative rounded-3xl p-6 sm:p-7 border transition-all shadow-xs flex flex-col justify-between ${
               activeConv
                 ? "bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/40 border-blue-300 shadow-sm"
-                : "bg-white border-slate-200 hover:border-[#1E3785]/40 hover:shadow-md"
+                : "bg-white border-slate-200 hover:border-[#1E4ED8]/40 hover:shadow-md"
             }`}
           >
             <div>
@@ -268,8 +268,8 @@ export default function MemberOnboardingPage() {
                 <div
                   className={`h-12 w-12 rounded-2xl flex items-center justify-center shadow-xs ${
                     activeConv
-                      ? "bg-[#1E3785] text-white"
-                      : "bg-blue-50 text-[#1E3785]"
+                      ? "bg-[#1E4ED8] text-white"
+                      : "bg-blue-50 text-[#1E4ED8]"
                   }`}
                 >
                   <MessageSquare className="h-6 w-6" />
@@ -308,7 +308,7 @@ export default function MemberOnboardingPage() {
             <div className="pt-6">
               <Button
                 variant="primary"
-                className="w-full justify-center bg-[#1E3785] hover:bg-[#162B6B] gap-2 shadow-xs min-h-[44px] text-sm font-semibold rounded-xl"
+                className="w-full justify-center bg-[#1E4ED8] hover:bg-[#1D40B0] gap-2 shadow-xs min-h-[44px] text-sm font-semibold rounded-xl"
                 isLoading={isStartingChat}
                 onClick={handleStartChat}
               >
@@ -370,7 +370,7 @@ export default function MemberOnboardingPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleOpenTranscript(conv)}
-                            className="text-xs text-[#1E3785] hover:text-[#162B6B] hover:bg-blue-50/80 h-7 px-2.5 font-medium rounded-lg"
+                            className="text-xs text-[#1E4ED8] hover:text-[#1D40B0] hover:bg-blue-50/80 h-7 px-2.5 font-medium rounded-lg"
                           >
                             Lihat Transkrip
                           </Button>
@@ -450,7 +450,7 @@ export default function MemberOnboardingPage() {
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-[#1E3785] to-blue-950 rounded-2xl p-5 text-white space-y-2">
+          <div className="bg-gradient-to-br from-[#0F2B5B] to-[#1E4ED8] rounded-2xl p-5 text-white space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-blue-100">
               <PhoneCall className="h-4 w-4 text-blue-300" />
               Hotline Darurat NOC 24 Jam
@@ -536,7 +536,7 @@ export default function MemberOnboardingPage() {
           <div className="max-h-[380px] overflow-y-auto p-3 space-y-2.5 bg-slate-50/60 rounded-2xl border border-slate-200/80">
             {isLoadingTranscript ? (
               <div className="flex flex-col items-center justify-center py-10 space-y-2">
-                <Loader2 className="h-6 w-6 text-[#1E3785] animate-spin" />
+                <Loader2 className="h-6 w-6 text-[#1E4ED8] animate-spin" />
                 <p className="text-xs text-slate-500">Memuat transkrip pesan...</p>
               </div>
             ) : transcriptMessages.length === 0 ? (
@@ -554,7 +554,7 @@ export default function MemberOnboardingPage() {
                     <div
                       className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-xs ${
                         isUser
-                          ? "bg-[#1E3785] text-white rounded-br-xs"
+                          ? "bg-[#1E4ED8] text-white rounded-br-xs"
                           : "bg-white text-slate-800 border border-slate-200 rounded-bl-xs shadow-2xs"
                       }`}
                     >
@@ -589,7 +589,7 @@ export default function MemberOnboardingPage() {
             <Link
               href={`/member/history?id=${activeTranscriptConv?.id}`}
               onClick={() => setActiveTranscriptConv(null)}
-              className="text-xs text-[#1E3785] hover:underline font-medium flex items-center gap-1"
+              className="text-xs text-[#1E4ED8] hover:underline font-medium flex items-center gap-1"
             >
               <span>Buka Halaman Riwayat Penuh</span>
               <ChevronRight className="h-3.5 w-3.5" />

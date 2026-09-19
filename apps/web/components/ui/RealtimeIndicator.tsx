@@ -51,12 +51,12 @@ export function RealtimeIndicator({ showLabel = true, className = "" }: Realtime
     <button
       type="button"
       onClick={handleReconnect}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 text-[11px] font-medium transition-all cursor-pointer ${className}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-full bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 text-[11px] font-medium transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-400 active:scale-95 ${className}`}
       title={error ? `${error} (Klik untuk menyambungkan ulang)` : "Koneksi terputus. Klik untuk menyambungkan ulang"}
     >
       <span className="h-2 w-2 rounded-full bg-red-500" />
       {showLabel && <span>Offline (Sambungkan)</span>}
-      <RefreshCw className="h-3 w-3 ml-0.5 opacity-70" />
+      <RefreshCw className="h-3 w-3 ml-0.5 opacity-70 hover:rotate-180 transition-transform duration-300" />
     </button>
   );
 }

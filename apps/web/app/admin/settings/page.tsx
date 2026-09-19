@@ -83,7 +83,7 @@ export default function AdminSettingsPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-200 min-h-[400px]">
-        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin mb-3" />
+        <Loader2 className="h-8 w-8 text-[#1E4ED8] animate-spin mb-3" />
         <p className="text-sm font-medium text-slate-600">Memuat konfigurasi sistem ION Broadband...</p>
       </div>
     );
@@ -151,7 +151,7 @@ export default function AdminSettingsPage() {
             <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between">
               <div className="space-y-0.5">
                 <label className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <Radio className="h-4 w-4 text-[#1E3785]" />
+                  <Radio className="h-4 w-4 text-[#1E4ED8]" />
                   Status Layanan Livechat
                 </label>
                 <p className="text-xs text-slate-500">
@@ -162,7 +162,7 @@ export default function AdminSettingsPage() {
                 type="button"
                 onClick={() => setSettings((s) => ({ ...s, livechat_enabled: !s.livechat_enabled }))}
                 className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-                  settings.livechat_enabled ? "bg-[#1E3785]" : "bg-slate-300"
+                  settings.livechat_enabled ? "bg-[#1E4ED8]" : "bg-slate-300"
                 }`}
               >
                 <span
@@ -225,7 +225,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setSettings({ ...settings, whatsapp_template: e.target.value })}
                 rows={3}
                 placeholder="Pesan yang otomatis tertulis saat pelanggan membuka WhatsApp..."
-                className="w-full text-xs sm:text-sm p-3 rounded-xl border border-slate-300 focus:border-[#1E3785] focus:ring-1 focus:ring-[#1E3785] outline-hidden transition-all bg-white text-slate-900"
+                className="w-full text-xs sm:text-sm p-3 rounded-xl border border-slate-300 focus:border-[#1E4ED8] focus:ring-1 focus:ring-[#1E4ED8] outline-hidden transition-all bg-white text-slate-900"
               />
               <p className="text-[11px] text-slate-400">
                 Teks ini akan otomatis terisi di kolom ketik WhatsApp pelanggan saat tombol diklik.
@@ -256,7 +256,7 @@ export default function AdminSettingsPage() {
               <Button
                 type="submit"
                 disabled={isSaving}
-                className="w-full sm:w-auto bg-[#1E3785] hover:bg-[#162B6B] text-white font-semibold text-xs px-6 py-2.5 rounded-xl shadow-xs gap-2 min-h-[44px] h-auto whitespace-nowrap"
+                className="w-full sm:w-auto bg-[#1E4ED8] hover:bg-[#1D40B0] text-white font-semibold text-xs px-6 py-2.5 rounded-xl shadow-xs gap-2 min-h-[44px] h-auto whitespace-nowrap"
               >
                 {isSaving ? (
                   <>
@@ -320,19 +320,19 @@ export default function AdminSettingsPage() {
                   className="w-full flex items-center justify-between p-3 rounded-xl bg-white border border-blue-200/90 hover:border-blue-400 shadow-2xs transition-all group cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-lg bg-blue-50 text-[#1E3785] flex items-center justify-center shrink-0">
+                    <div className="h-9 w-9 rounded-lg bg-blue-50 text-[#1E4ED8] flex items-center justify-center shrink-0">
                       <PhoneCall className="h-4 w-4" />
                     </div>
                     <div className="text-left">
-                      <div className="text-xs font-bold text-slate-800 group-hover:text-[#1E3785]">
+                      <div className="text-xs font-bold text-slate-800 group-hover:text-[#1E4ED8]">
                         Call Center 24 Jam
                       </div>
-                      <div className="text-[11px] text-[#1E3785] font-semibold">
+                      <div className="text-[11px] text-[#1E4ED8] font-semibold">
                         {settings.hotline_number || "1500-ION"}
                       </div>
                     </div>
                   </div>
-                  <ExternalLink className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1E3785]" />
+                  <ExternalLink className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#1E4ED8]" />
                 </a>
 
                 {/* WhatsApp Action */}

@@ -78,7 +78,7 @@ export function AdminAuditLogs() {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span className="inline-flex items-center gap-1 font-mono font-medium text-[11px] bg-slate-100 px-2 py-0.5 rounded text-slate-800">
-                        <Activity className="h-3 w-3 text-[#1E3785] shrink-0" />
+                        <Activity className="h-3 w-3 text-[#1E4ED8] shrink-0" />
                         {log.action}
                       </span>
                     </td>

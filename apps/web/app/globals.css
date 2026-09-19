@@ -2,11 +2,23 @@
 
 @layer base {
   :root {
-    --brand-primary: #1E3785;
-    --brand-primary-hover: #162B6B;
-    --brand-primary-active: #102154;
-    --brand-primary-soft: #E8EDF9;
-    --brand-primary-surface: #F3F6FD;
+    --brand-primary: #1E4ED8;
+    --brand-primary-hover: #1D40B0;
+    --brand-primary-active: #153396;
+    --brand-primary-soft: #EFF6FF;
+    --brand-primary-surface: #DBEAFE;
+
+    --brand-secondary: #0F2B5B;
+    --brand-secondary-hover: #0A1E40;
+    --brand-secondary-active: #07152D;
+    --brand-secondary-soft: #F0F4FA;
+    --brand-secondary-surface: #E2EAF4;
+
+    --brand-accent: #FF6B00;
+    --brand-accent-hover: #E55F00;
+    --brand-accent-active: #CC5400;
+    --brand-accent-soft: #FFF3EB;
+    --brand-accent-surface: #FFE4D1;
 
     --bg-app: #F8FAFC;
     --surface-card: #FFFFFF;

@@ -140,11 +140,11 @@ export function AgentProfileDropdown() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-2 p-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all text-left shadow-2xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1E3785]/20"
+        className="w-full flex items-center justify-between gap-2 p-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all text-left shadow-2xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1E4ED8]/20"
         title="Menu Profil & Pengaturan"
       >
         <div className="flex items-center gap-2 min-w-0">
-          <div className="h-8 w-8 shrink-0 rounded-lg bg-gradient-to-tr from-[#1E3785] to-blue-700 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+          <div className="h-8 w-8 shrink-0 rounded-lg bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center shadow-xs">
             {user?.name?.slice(0, 2).toUpperCase() || "AG"}
           </div>
           <div className="flex flex-col items-start leading-tight min-w-0">
@@ -170,7 +170,7 @@ export function AgentProfileDropdown() {
               <span className="text-xs font-bold text-slate-900 truncate">
                 {user?.name}
               </span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-[#1E3785] border border-blue-100">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-[#1E4ED8] border border-blue-100">
                 Agent
               </span>
             </div>
@@ -269,7 +269,7 @@ export function AgentProfileDropdown() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingProfile}
-              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
+              className="text-xs bg-[#1E4ED8] hover:bg-[#1D40B0]"
             >
               Simpan Perubahan
             </Button>
@@ -332,7 +332,7 @@ export function AgentProfileDropdown() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingPassword}
-              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
+              className="text-xs bg-[#1E4ED8] hover:bg-[#1D40B0]"
             >
               Perbarui Kata Sandi
             </Button>

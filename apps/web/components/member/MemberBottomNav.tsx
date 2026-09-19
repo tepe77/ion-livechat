@@ -208,11 +208,11 @@ export function MemberBottomNav() {
             className={cn(
               "flex flex-col items-center justify-center flex-1 py-1 transition-colors",
               pathname === "/member"
-                ? "text-[#1E3785] font-bold"
+                ? "text-[#1E4ED8] font-bold"
                 : "text-slate-400 hover:text-slate-700 font-medium"
             )}
           >
-            <Home className={cn("h-5 w-5 mb-0.5", pathname === "/member" && "text-[#1E3785]")} />
+            <Home className={cn("h-5 w-5 mb-0.5", pathname === "/member" && "text-[#1E4ED8]")} />
             <span className="text-[10px] tracking-tight">Beranda</span>
           </Link>
 
@@ -222,11 +222,11 @@ export function MemberBottomNav() {
             className={cn(
               "flex flex-col items-center justify-center flex-1 py-1 transition-colors",
               pathname === "/member/history"
-                ? "text-[#1E3785] font-bold"
+                ? "text-[#1E4ED8] font-bold"
                 : "text-slate-400 hover:text-slate-700 font-medium"
             )}
           >
-            <History className={cn("h-5 w-5 mb-0.5", pathname === "/member/history" && "text-[#1E3785]")} />
+            <History className={cn("h-5 w-5 mb-0.5", pathname === "/member/history" && "text-[#1E4ED8]")} />
             <span className="text-[10px] tracking-tight">Riwayat</span>
           </Link>
 
@@ -240,7 +240,7 @@ export function MemberBottomNav() {
                 "h-14 w-14 rounded-full flex items-center justify-center text-white shadow-xl transition-all active:scale-95 cursor-pointer relative",
                 pathname === "/member/chat"
                   ? "bg-gradient-to-tr from-emerald-600 to-teal-500 shadow-emerald-600/30 ring-4 ring-white"
-                  : "bg-gradient-to-tr from-[#1E3785] via-blue-700 to-sky-600 shadow-blue-900/35 ring-4 ring-white hover:shadow-2xl"
+                  : "bg-gradient-to-tr from-[#0F2B5B] via-[#1E4ED8] to-[#1E4ED8] shadow-blue-900/35 ring-4 ring-white hover:shadow-2xl"
               )}
               title={pathname === "/member/chat" ? "Sedang dalam sesi chat" : "Mulai sesi chat"}
             >
@@ -259,7 +259,7 @@ export function MemberBottomNav() {
             <span
               className={cn(
                 "text-[10px] font-bold mt-1 tracking-tight text-center whitespace-nowrap",
-                pathname === "/member/chat" ? "text-emerald-700" : "text-[#1E3785]"
+                pathname === "/member/chat" ? "text-emerald-700" : "text-[#1E4ED8]"
               )}
             >
               {pathname === "/member/chat" ? "Chat Aktif" : "Mulai Chat"}
@@ -312,7 +312,7 @@ export function MemberBottomNav() {
 
             <div className="flex items-center justify-between">
               <span className="text-xs text-slate-500 font-medium">Nomor Pelanggan:</span>
-              <span className="text-xs font-mono font-bold text-[#1E3785]">
+              <span className="text-xs font-mono font-bold text-[#1E4ED8]">
                 {user?.customer_number || `ION-${String(user?.id || 1).padStart(6, "0")}`}
               </span>
             </div>
@@ -324,7 +324,7 @@ export function MemberBottomNav() {
           </div>
 
           <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-100 space-y-1.5 text-xs text-blue-900">
-            <div className="font-bold flex items-center gap-1.5 text-[#1E3785]">
+            <div className="font-bold flex items-center gap-1.5 text-[#1E4ED8]">
               <Zap className="h-4 w-4 text-amber-500 shrink-0" />
               Tips Cepat Gangguan Internet
             </div>
@@ -356,13 +356,13 @@ export function MemberBottomNav() {
       >
         <div className="space-y-4">
           <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-            <div className="h-12 w-12 rounded-full bg-[#1E3785] text-white font-bold flex items-center justify-center text-base shadow-xs shrink-0">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold flex items-center justify-center text-base shadow-xs shrink-0">
               {user?.name?.charAt(0).toUpperCase() || "P"}
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-bold text-slate-900 truncate">{user?.name}</div>
               <div className="text-xs text-slate-500 truncate">{user?.email}</div>
-              <div className="text-[11px] font-mono font-semibold text-[#1E3785] mt-0.5">
+              <div className="text-[11px] font-mono font-semibold text-[#1E4ED8] mt-0.5">
                 {user?.customer_number || `ION-${String(user?.id || 1).padStart(6, "0")}`}
               </div>
             </div>
@@ -375,7 +375,7 @@ export function MemberBottomNav() {
               className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-semibold text-slate-800 transition-colors text-left cursor-pointer"
             >
               <div className="flex items-center gap-2.5">
-                <Edit3 className="h-4 w-4 text-[#1E3785]" />
+                <Edit3 className="h-4 w-4 text-[#1E4ED8]" />
                 <span>Ubah Nama, Email & Password</span>
               </div>
               <span className="text-slate-400">›</span>
@@ -492,7 +492,7 @@ export function MemberBottomNav() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingProfile}
-              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
+              className="text-xs bg-[#1E4ED8] hover:bg-[#1D40B0]"
             >
               Simpan Perubahan
             </Button>
@@ -553,7 +553,7 @@ export function MemberBottomNav() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingCustNum}
-              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
+              className="text-xs bg-[#1E4ED8] hover:bg-[#1D40B0]"
             >
               Simpan Nomor
             </Button>

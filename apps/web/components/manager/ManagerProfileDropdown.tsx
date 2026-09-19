@@ -217,7 +217,7 @@ export function ManagerProfileDropdown() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 p-1.5 pr-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all text-left shadow-2xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1E3785]/20"
+        className="flex items-center gap-2.5 p-1.5 pr-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all text-left shadow-2xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1E4ED8]/20"
         title="Menu Profil & Akun Supervisor"
       >
         <div className="relative">
@@ -228,7 +228,7 @@ export function ManagerProfileDropdown() {
               className="h-8 w-8 rounded-lg object-cover border border-slate-200 shadow-xs"
             />
           ) : (
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-[#1E3785] to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center shadow-xs">
               {user?.name?.slice(0, 2).toUpperCase() || "SP"}
             </div>
           )}
@@ -263,7 +263,7 @@ export function ManagerProfileDropdown() {
                 className="h-9 w-9 rounded-xl object-cover border border-slate-200 shrink-0"
               />
             ) : (
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-[#1E3785] to-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center shrink-0">
                 {user?.name?.slice(0, 2).toUpperCase() || "SP"}
               </div>
             )}
@@ -379,7 +379,7 @@ export function ManagerProfileDropdown() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingProfile}
-              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
+              className="text-xs bg-[#1E4ED8] hover:bg-[#1D40B0]"
             >
               Simpan Perubahan
             </Button>
@@ -418,11 +418,11 @@ export function ManagerProfileDropdown() {
                   className="h-16 w-16 rounded-2xl object-cover border-2 border-white shadow-md"
                 />
               ) : (
-                <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-[#1E3785] to-indigo-600 text-white font-bold text-lg flex items-center justify-center shadow-md">
+                <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold text-lg flex items-center justify-center shadow-md">
                   {user?.name?.slice(0, 2).toUpperCase() || "SP"}
                 </div>
               )}
-              <span className="absolute -top-1 -right-1 bg-[#1E3785] text-white p-1 rounded-full shadow-xs">
+              <span className="absolute -top-1 -right-1 bg-[#1E4ED8] text-white p-1 rounded-full shadow-xs">
                 <Sparkles className="h-3 w-3" />
               </span>
             </div>
@@ -452,7 +452,7 @@ export function ManagerProfileDropdown() {
                     }}
                     className={`p-1 rounded-xl border transition-all hover:scale-105 cursor-pointer ${
                       isSelected
-                        ? "border-[#1E3785] ring-2 ring-[#1E3785]/30 bg-blue-50"
+                        ? "border-[#1E4ED8] ring-2 ring-[#1E4ED8]/30 bg-blue-50"
                         : "border-slate-200 bg-white hover:border-slate-300"
                     }`}
                   >
@@ -500,7 +500,7 @@ export function ManagerProfileDropdown() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingAvatar}
-              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
+              className="text-xs bg-[#1E4ED8] hover:bg-[#1D40B0]"
             >
               Simpan Avatar
             </Button>
@@ -563,7 +563,7 @@ export function ManagerProfileDropdown() {
               variant="primary"
               size="sm"
               isLoading={isUpdatingPassword}
-              className="text-xs bg-[#1E3785] hover:bg-[#162B6B]"
+              className="text-xs bg-[#1E4ED8] hover:bg-[#1D40B0]"
             >
               Perbarui Kata Sandi
             </Button>

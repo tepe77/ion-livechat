@@ -41,7 +41,7 @@ export default function ManagerDashboardPage() {
   if (!isInitialized || !user) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-[#1E3785] animate-spin" />
+        <Loader2 className="h-8 w-8 text-[#1E4ED8] animate-spin" />
       </div>
     );
   }
@@ -49,7 +49,7 @@ export default function ManagerDashboardPage() {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col">
       {/* Manager Header */}
-      <header className="bg-white border-b border-slate-200 px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between sticky top-0 z-40 gap-2">
+      <header className="bg-white border-b border-slate-200 px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between sticky top-0 z-40 gap-2">
         <BrandLogo
           size="sm"
           subtitle={
@@ -89,13 +89,13 @@ export default function ManagerDashboardPage() {
       </header>
 
       {/* Subnav Navigation Tabs */}
-      <div className="bg-white border-b border-slate-200 px-3 sm:px-6 overflow-x-auto no-scrollbar scroll-smooth">
+      <div className="bg-white border-b border-slate-200 px-3.5 sm:px-6 lg:px-8 overflow-x-auto no-scrollbar scroll-smooth">
         <nav className="flex space-x-2 sm:space-x-6 min-w-max">
           <button
             onClick={() => setActiveTab("overview")}
             className={`py-3 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 transition-colors whitespace-nowrap min-h-[44px] ${
               activeTab === "overview"
-                ? "border-[#1E3785] text-[#1E3785] font-semibold"
+                ? "border-[#1E4ED8] text-[#1E4ED8] font-semibold"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -108,7 +108,7 @@ export default function ManagerDashboardPage() {
             onClick={() => setActiveTab("agents")}
             className={`py-3 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 transition-colors whitespace-nowrap min-h-[44px] ${
               activeTab === "agents"
-                ? "border-[#1E3785] text-[#1E3785] font-semibold"
+                ? "border-[#1E4ED8] text-[#1E4ED8] font-semibold"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -121,7 +121,7 @@ export default function ManagerDashboardPage() {
             onClick={() => setActiveTab("conversations")}
             className={`py-3 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 transition-colors whitespace-nowrap min-h-[44px] ${
               activeTab === "conversations"
-                ? "border-[#1E3785] text-[#1E3785] font-semibold"
+                ? "border-[#1E4ED8] text-[#1E4ED8] font-semibold"
                 : "border-transparent text-slate-500 hover:text-slate-800"
             }`}
           >
@@ -133,7 +133,7 @@ export default function ManagerDashboardPage() {
       </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-3.5 sm:p-5 md:p-6 max-w-7xl w-full mx-auto space-y-4 sm:space-y-6">
+      <main className="flex-1 p-3.5 sm:p-6 lg:p-8 w-full space-y-4 sm:space-y-6">
         {activeTab === "overview" && <ManagerDashboard onNavigateTab={setActiveTab} />}
         {activeTab === "agents" && <AgentMonitoringTable />}
         {activeTab === "conversations" && <ConversationMonitor />}
