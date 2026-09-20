@@ -26,6 +26,17 @@ class AdminController extends Controller
             $query->whereHas('role', fn ($q) => $q->where('slug', $request->role));
         }
 
+        if ($request->has('status') && $request->status !== null && $request->status !== '') {
+            $statusVal = strtolower((string) $request->status);
+            if ($statusVal === 'active' || $statusVal === '1' || $statusVal === 'true') {
+                $query->where('is_active', true);
+            } elseif ($statusVal === 'inactive' || $statusVal === '0' || $statusVal === 'false') {
+                $query->where('is_active', false);
+            }
+        } elseif ($request->has('is_active') && $request->is_active !== null && $request->is_active !== '') {
+            $query->where('is_active', filter_var($request->is_active, FILTER_VALIDATE_BOOLEAN));
+        }
+
         if ($request->filled('search')) {
             $search = '%' . $request->search . '%';
             $query->where(function ($q) use ($search) {
@@ -33,6 +44,23 @@ class AdminController extends Controller
                     ->orWhere('email', 'ilike', $search);
             });
         }
+
+        // Global count statistics for tabs based on current role and search scope
+        $countsQuery = User::query();
+        if ($request->filled('role')) {
+            $countsQuery->whereHas('role', fn ($q) => $q->where('slug', $request->role));
+        }
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
+            $countsQuery->where(function ($q) use ($search) {
+                $q->where('name', 'ilike', $search)
+                    ->orWhere('email', 'ilike', $search);
+            });
+        }
+
+        $totalCount = (clone $countsQuery)->count();
+        $activeCount = (clone $countsQuery)->where('is_active', true)->count();
+        $inactiveCount = (clone $countsQuery)->where('is_active', false)->count();
 
         $perPage = min(max((int) $request->input('per_page', 15), 1), 100);
         $users = $query->paginate($perPage);
@@ -44,6 +72,9 @@ class AdminController extends Controller
                 'per_page' => $users->perPage(),
                 'total' => $users->total(),
                 'last_page' => $users->lastPage(),
+                'total_count' => $totalCount,
+                'active_count' => $activeCount,
+                'inactive_count' => $inactiveCount,
             ],
         ]);
     }

@@ -145,7 +145,7 @@ export function MemberProfileDropdown() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2.5 p-1.5 pl-2 pr-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all text-left shadow-2xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1E4ED8]/20"
       >
-        <div className="h-7 w-7 rounded-lg bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center shadow-xs">
+        <div className="h-7 w-7 rounded-lg bg-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center shadow-xs">
           {user?.name?.charAt(0).toUpperCase() || "M"}
         </div>
         <div className="hidden sm:flex flex-col items-start leading-tight">

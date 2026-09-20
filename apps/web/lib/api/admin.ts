@@ -8,13 +8,29 @@ export interface RoleWithPermissions {
   permissions: Array<{ id: number; name: string; slug: string }>;
 }
 
+export interface AdminUsersMeta {
+  current_page: number;
+  per_page: number;
+  total: number;
+  last_page?: number;
+  total_count?: number;
+  active_count?: number;
+  inactive_count?: number;
+}
+
+export interface AdminUsersResponse {
+  data: User[];
+  meta: AdminUsersMeta;
+}
+
 export async function getAdminUsers(params?: {
   role?: string;
+  status?: string;
   search?: string;
   page?: number;
   per_page?: number;
-}): Promise<ApiPaginatedResponse<User>> {
-  return apiClient<ApiPaginatedResponse<User>>("/admin/users", { params: params as any });
+}): Promise<AdminUsersResponse> {
+  return apiClient<AdminUsersResponse>("/admin/users", { params: params as any });
 }
 
 export async function updateAdminUser(

@@ -118,6 +118,34 @@ class StorageManagementTest extends TestCase
         $this->assertDatabaseHas('audit_logs', ['id' => $recentLog->id]);
     }
 
+    public function test_pruning_removes_all_audit_logs_when_retention_days_is_zero(): void
+    {
+        $log1 = AuditLog::create([
+            'actor_id' => $this->superadmin->id,
+            'action' => 'recent.action.1',
+            'created_at' => now()->subHours(2),
+        ]);
+
+        $log2 = AuditLog::create([
+            'actor_id' => $this->superadmin->id,
+            'action' => 'recent.action.2',
+            'created_at' => now()->subMinutes(10),
+        ]);
+
+        $this->actingAs($this->superadmin, 'sanctum')
+            ->postJson('/api/v1/admin/storage/prune', [
+                'prune_audit_logs' => true,
+                'retention_audit_logs_days' => 0,
+                'prune_attachments' => false,
+                'clean_orphans' => false,
+            ])
+            ->assertStatus(200)
+            ->assertJsonPath('data.deleted_audit_logs_count', 2);
+
+        $this->assertDatabaseMissing('audit_logs', ['id' => $log1->id]);
+        $this->assertDatabaseMissing('audit_logs', ['id' => $log2->id]);
+    }
+
     public function test_pruning_removes_old_closed_conversation_attachments(): void
     {
         // 1. Closed conversation 70 days ago (older than default 60 days)

@@ -229,7 +229,7 @@ export function AdminProfileDropdown() {
               className="h-8 w-8 rounded-lg object-cover border border-purple-200 shadow-xs"
             />
           ) : (
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-purple-700 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
+            <div className="h-8 w-8 rounded-lg bg-purple-700 text-white font-bold text-xs flex items-center justify-center shadow-xs">
               {user?.name?.slice(0, 2).toUpperCase() || "SA"}
             </div>
           )}
@@ -264,7 +264,7 @@ export function AdminProfileDropdown() {
                 className="h-9 w-9 rounded-xl object-cover border border-purple-200 shrink-0"
               />
             ) : (
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-purple-700 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+              <div className="h-9 w-9 rounded-xl bg-purple-700 text-white font-bold text-xs flex items-center justify-center shrink-0">
                 {user?.name?.slice(0, 2).toUpperCase() || "SA"}
               </div>
             )}
@@ -419,7 +419,7 @@ export function AdminProfileDropdown() {
                   className="h-16 w-16 rounded-2xl object-cover border-2 border-white shadow-md"
                 />
               ) : (
-                <div className="h-16 w-16 rounded-2xl bg-gradient-to-tr from-purple-700 to-indigo-600 text-white font-bold text-lg flex items-center justify-center shadow-md">
+                <div className="h-16 w-16 rounded-2xl bg-purple-700 text-white font-bold text-lg flex items-center justify-center shadow-md">
                   {user?.name?.slice(0, 2).toUpperCase() || "SA"}
                 </div>
               )}

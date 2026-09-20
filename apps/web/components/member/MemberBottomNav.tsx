@@ -239,8 +239,8 @@ export function MemberBottomNav() {
               className={cn(
                 "h-14 w-14 rounded-full flex items-center justify-center text-white shadow-xl transition-all active:scale-95 cursor-pointer relative",
                 pathname === "/member/chat"
-                  ? "bg-gradient-to-tr from-emerald-600 to-teal-500 shadow-emerald-600/30 ring-4 ring-white"
-                  : "bg-gradient-to-tr from-[#0F2B5B] via-[#1E4ED8] to-[#1E4ED8] shadow-blue-900/35 ring-4 ring-white hover:shadow-2xl"
+                  ? "bg-emerald-600 shadow-emerald-600/30 ring-4 ring-white"
+                  : "bg-[#1E4ED8] hover:bg-[#1D40B0] shadow-blue-900/35 ring-4 ring-white hover:shadow-2xl"
               )}
               title={pathname === "/member/chat" ? "Sedang dalam sesi chat" : "Mulai sesi chat"}
             >
@@ -356,7 +356,7 @@ export function MemberBottomNav() {
       >
         <div className="space-y-4">
           <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-            <div className="h-12 w-12 rounded-full bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold flex items-center justify-center text-base shadow-xs shrink-0">
+            <div className="h-12 w-12 rounded-full bg-[#1E4ED8] text-white font-bold flex items-center justify-center text-base shadow-xs shrink-0">
               {user?.name?.charAt(0).toUpperCase() || "P"}
             </div>
             <div className="min-w-0 flex-1">

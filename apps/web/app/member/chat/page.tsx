@@ -256,7 +256,7 @@ export default function MemberChatPage() {
               </div>
 
               {/* NOC Contact Card */}
-              <div className="bg-gradient-to-br from-[#0F2B5B] to-[#1E4ED8] rounded-2xl p-4 text-white shadow-xs space-y-2">
+              <div className="bg-[#1E4ED8] rounded-2xl p-4 text-white shadow-xs space-y-2">
                 <div className="flex items-center gap-2">
                   <PhoneCall className="h-4 w-4 text-blue-200" />
                   <span className="text-xs font-bold">Pusat Bantuan Darurat 24 Jam</span>

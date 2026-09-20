@@ -5,14 +5,15 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   label?: string;
   error?: string;
   helperText?: string;
+  wrapperClassName?: string;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, helperText, id, ...props }, ref) => {
+  ({ className, wrapperClassName, label, error, helperText, id, ...props }, ref) => {
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
     return (
-      <div className="w-full space-y-1.5">
+      <div className={cn("w-full space-y-1.5", wrapperClassName)}>
         {label && (
           <label htmlFor={inputId} className="block text-sm font-medium text-slate-700">
             {label}

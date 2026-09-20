@@ -81,6 +81,8 @@ class StorageController extends Controller
             'prune_audit_logs' => ['nullable', 'boolean'],
             'prune_attachments' => ['nullable', 'boolean'],
             'clean_orphans' => ['nullable', 'boolean'],
+            'retention_audit_logs_days' => ['nullable', 'integer', 'min:0'],
+            'retention_attachments_days' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $summary = $this->storageService->prune($validated, $request->user());

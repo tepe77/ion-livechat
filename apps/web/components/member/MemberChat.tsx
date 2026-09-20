@@ -369,7 +369,7 @@ export function MemberChat({
       <header className="flex items-center justify-between px-5 py-3.5 bg-white border-b border-slate-200 shrink-0 z-10">
         <div className="flex items-center gap-3.5">
           <div className="relative">
-            <div className="flex items-center justify-center h-11 w-11 rounded-2xl bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-semibold shadow-xs">
+            <div className="flex items-center justify-center h-11 w-11 rounded-2xl bg-[#1E4ED8] text-white font-semibold shadow-xs">
               <Headphones className="h-6 w-6" />
             </div>
             {!isClosed && (
@@ -424,7 +424,7 @@ export function MemberChat({
 
       {/* Waiting Status Alert Banner */}
       {isWaiting && (
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-5 py-3 text-xs text-amber-900 flex items-center justify-between shrink-0">
+        <div className="bg-amber-50 border-b border-amber-200 px-5 py-3 text-xs text-amber-900 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="h-7 w-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
               <Clock className="h-4 w-4" />

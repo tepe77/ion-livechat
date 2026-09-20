@@ -292,7 +292,7 @@ export default function AdminSettingsPage() {
             </p>
 
             {/* Mockup Modal Container */}
-            <div className="p-5 rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/90 border border-slate-200/90 shadow-sm space-y-4">
+            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/90 shadow-sm space-y-4">
               {/* Badge & Icon Header */}
               <div className="text-center space-y-2">
                 <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-amber-100 text-amber-700 border border-amber-200/70 shadow-2xs">

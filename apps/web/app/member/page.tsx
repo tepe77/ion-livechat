@@ -12,6 +12,7 @@ import { Dialog } from "../../components/ui/Dialog";
 import { MemberProfileDropdown } from "../../components/member/MemberProfileDropdown";
 import { MemberBottomNav } from "../../components/member/MemberBottomNav";
 import { OfflineNoticeModal, type EmergencyContacts } from "../../components/member/OfflineNoticeModal";
+import { MemberOnboardingCard } from "../../components/member/MemberOnboardingCard";
 import { getPublicSettings, type SystemSettings } from "../../lib/api/settings";
 import { BrandLogo } from "../../components/ui/BrandLogo";
 import { getEcho } from "../../lib/realtime/client";
@@ -21,7 +22,6 @@ import {
   Headphones,
   History,
   LogOut,
-  MessageSquare,
   Sparkles,
   Wifi,
   ShieldCheck,
@@ -32,7 +32,6 @@ import {
   Trash2,
   CheckCircle2,
   Activity,
-  ArrowRight,
   AlertTriangle,
   Loader2,
   Star,
@@ -231,93 +230,19 @@ export default function MemberOnboardingPage() {
 
       {/* Main Content Body */}
       <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 space-y-6 pb-24 md:pb-8">
-        {/* Welcome Greeting Banner */}
-        <section className="bg-gradient-to-r from-[#0F2B5B] via-[#1E4ED8] to-[#0F2B5B] rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 rounded-full bg-white/5 blur-2xl pointer-events-none" />
-          <div className="relative z-10 max-w-2xl space-y-3">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-medium text-blue-100">
-              <ShieldCheck className="h-3.5 w-3.5 text-blue-300" />
-              <span className="text-blue-200">No. Pelanggan:</span>
-              <span className="font-mono font-bold text-white tracking-wide">
-                {user?.customer_number || `ION-${String(user?.id || 1).padStart(6, "0")}`}
-              </span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Halo, {user?.name || "Pelanggan"}! 👋
-            </h1>
-            <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
-              Selamat datang di Pusat Dukungan Pelanggan ION Broadband Livechat. Butuh panduan teknis,
-              pemeriksaan router ONT, atau informasi tagihan? Tim kami siap melayani Anda secara
-              realtime.
-            </p>
-          </div>
-        </section>
+        {/* Total Redesigned Hero Onboarding Panel */}
+        <MemberOnboardingCard
+          customerName={user?.name}
+          customerNumber={user?.customer_number || (user?.id ? `ION-${String(user.id).padStart(6, "0")}` : undefined)}
+          onStartChat={handleStartChat}
+          isStartingChat={isStartingChat}
+          hasActiveChat={!!activeConv}
+          activeConvId={activeConv?.id}
+          hasOnlineAgents={systemSettings?.has_online_agents !== false}
+        />
 
-        {/* Main Action Cards: 1 Card for Live Chat, 1 Card for Riwayat Percakapan & Transkrip */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-          {/* Card 1: Live Chat / Customer Service */}
-          <div
-            className={`group relative rounded-3xl p-6 sm:p-7 border transition-all shadow-xs flex flex-col justify-between ${
-              activeConv
-                ? "bg-gradient-to-br from-blue-50/70 via-white to-indigo-50/40 border-blue-300 shadow-sm"
-                : "bg-white border-slate-200 hover:border-[#1E4ED8]/40 hover:shadow-md"
-            }`}
-          >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div
-                  className={`h-12 w-12 rounded-2xl flex items-center justify-center shadow-xs ${
-                    activeConv
-                      ? "bg-[#1E4ED8] text-white"
-                      : "bg-blue-50 text-[#1E4ED8]"
-                  }`}
-                >
-                  <MessageSquare className="h-6 w-6" />
-                </div>
-
-                {activeConv ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
-                    <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
-                    Sesi Berjalan (#{activeConv.id})
-                  </span>
-                ) : systemSettings?.has_online_agents === false ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200 transition-colors">
-                    <span className="h-2 w-2 rounded-full bg-amber-500" />
-                    Offline (Hotline 24 Jam)
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 transition-colors">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                    Teknisi Siap Membantu
-                  </span>
-                )}
-              </div>
-
-              <h2 className="text-xl font-bold text-slate-900 mb-2">
-                {activeConv ? "Lanjutkan Sesi Chat Aktif" : "Mulai Obrolan / Konsultasi Baru"}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                {activeConv
-                  ? `Anda memiliki percakapan aktif yang dilayani oleh ${
-                      activeConv.agent?.name || "Petugas CS ION"
-                    }. Masuk kembali ke ruang chat untuk melanjutkan percakapan.`
-                  : "Mulai percakapan bantuan dengan teknisi ISP kami melalui Smart Routing otomatis untuk kendala internet, konfigurasi router WiFi, atau pertanyaan layanan."}
-              </p>
-            </div>
-
-            <div className="pt-6">
-              <Button
-                variant="primary"
-                className="w-full justify-center bg-[#1E4ED8] hover:bg-[#1D40B0] gap-2 shadow-xs min-h-[44px] text-sm font-semibold rounded-xl"
-                isLoading={isStartingChat}
-                onClick={handleStartChat}
-              >
-                <span>{activeConv ? "Masuk ke Ruang Chat Aktif" : "Mulai Percakapan Sekarang"}</span>
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
+        {/* Riwayat Percakapan & Transkrip (Dedicated Unified Section) */}
+        <section className="w-full">
           {/* Card 2: Riwayat Percakapan & Transkrip (Single Unified Card) */}
           <div className="rounded-3xl p-6 sm:p-7 bg-white border border-slate-200 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between">
             <div className="space-y-4">
@@ -450,7 +375,7 @@ export default function MemberOnboardingPage() {
             </p>
           </div>
 
-          <div className="bg-gradient-to-br from-[#0F2B5B] to-[#1E4ED8] rounded-2xl p-5 text-white space-y-2">
+          <div className="bg-[#023E8A] rounded-2xl p-5 text-white space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-blue-100">
               <PhoneCall className="h-4 w-4 text-blue-300" />
               Hotline Darurat NOC 24 Jam

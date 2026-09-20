@@ -106,9 +106,15 @@ class StorageManagementService
         $freedBytes = 0;
 
         // 1. Prune Audit Logs
-        if ($pruneLogs && $auditLogDays > 0) {
-            $cutoffDate = now()->subDays($auditLogDays);
-            $query = AuditLog::where('created_at', '<', $cutoffDate);
+        if ($pruneLogs) {
+            if ($auditLogDays > 0) {
+                $cutoffDate = now()->subDays($auditLogDays);
+                $query = AuditLog::where('created_at', '<', $cutoffDate);
+            } else {
+                // When auditLogDays is 0, prune all audit logs
+                $query = AuditLog::query();
+            }
+
             $deletedLogsCount = $query->count();
 
             if (!$dryRun && $deletedLogsCount > 0) {

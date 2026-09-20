@@ -144,7 +144,7 @@ export function AgentProfileDropdown() {
         title="Menu Profil & Pengaturan"
       >
         <div className="flex items-center gap-2 min-w-0">
-          <div className="h-8 w-8 shrink-0 rounded-lg bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center shadow-xs">
+          <div className="h-8 w-8 shrink-0 rounded-lg bg-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center shadow-xs">
             {user?.name?.slice(0, 2).toUpperCase() || "AG"}
           </div>
           <div className="flex flex-col items-start leading-tight min-w-0">

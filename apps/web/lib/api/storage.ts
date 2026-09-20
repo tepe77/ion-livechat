@@ -44,6 +44,8 @@ export interface PruneStoragePayload {
   prune_audit_logs?: boolean;
   prune_attachments?: boolean;
   clean_orphans?: boolean;
+  retention_audit_logs_days?: number;
+  retention_attachments_days?: number;
 }
 
 export interface PruneStorageResult {

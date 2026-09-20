@@ -11,6 +11,7 @@ import {
   ExternalLink,
   ShieldAlert,
   ArrowRight,
+  X,
 } from "lucide-react";
 
 export interface EmergencyContacts {
@@ -56,19 +57,29 @@ export function OfflineNoticeModal({
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      title=""
+      hideHeader
       className="max-w-md p-0 overflow-hidden rounded-2xl border-none shadow-2xl"
     >
-      {/* Visual Top Header */}
-      <div className="bg-gradient-to-br from-[#0F2B5B] via-[#0F2B5B] to-[#1E4ED8] p-6 text-white text-center relative">
-        <div className="mx-auto mb-3 inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 shadow-inner">
+      {/* Visual Top Header with Integrated Close Button */}
+      <div className="bg-[#023E8A] p-6 text-white text-center relative">
+        {/* Integrated Top-Right Close Button (Zero awkward gap) */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-4 right-4 h-9 w-9 rounded-xl flex items-center justify-center text-blue-200/80 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/40"
+          aria-label="Tutup modal"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
+        <div className="mx-auto mb-3 inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/20 text-amber-300 shadow-inner">
           <Headphones className="h-7 w-7" />
         </div>
         <h3 className="text-base sm:text-lg font-bold tracking-tight">{title}</h3>
-        <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 text-[11px] font-medium text-blue-100 border border-white/10">
+        {/* <div className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 text-[11px] font-medium text-blue-100 border border-white/10">
           <Clock className="h-3 w-3 text-amber-300" />
           <span>{operationalHours}</span>
-        </div>
+        </div> */}
       </div>
 
       {/* Body Content */}
@@ -85,22 +96,22 @@ export function OfflineNoticeModal({
           {/* Hotline / Call Center Button */}
           <a
             href={`tel:${hotline}`}
-            className="flex items-center justify-between p-3.5 rounded-xl border border-blue-200 bg-blue-50/50 hover:bg-blue-50 hover:border-[#1E4ED8] transition-all group shadow-2xs cursor-pointer"
+            className="flex items-center justify-between p-3.5 rounded-xl border border-blue-200 bg-blue-50/50 hover:bg-blue-50 hover:border-[#023E8A] transition-all group shadow-2xs cursor-pointer"
           >
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-[#1E4ED8] text-white flex items-center justify-center shrink-0 shadow-xs">
+              <div className="h-10 w-10 rounded-xl bg-[#023E8A] text-white flex items-center justify-center shrink-0 shadow-xs">
                 <PhoneCall className="h-5 w-5" />
               </div>
               <div className="text-left">
-                <div className="text-xs font-bold text-slate-900 group-hover:text-[#1E4ED8] transition-colors">
+                <div className="text-xs font-bold text-slate-900 group-hover:text-[#023E8A] transition-colors">
                   Call Center / Hotline Bebas Pulsa
                 </div>
-                <div className="text-xs text-[#1E4ED8] font-extrabold tracking-wide">
+                <div className="text-xs text-[#023E8A] font-extrabold tracking-wide">
                   {hotline}
                 </div>
               </div>
             </div>
-            <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-[#1E4ED8] transition-colors" />
+            <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-[#023E8A] transition-colors" />
           </a>
 
           {/* WhatsApp Dukungan Teknis Button */}

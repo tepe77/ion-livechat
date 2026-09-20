@@ -417,7 +417,7 @@ export function ManagerDashboard({ onNavigateTab }: ManagerDashboardProps) {
                             className="h-9 w-9 rounded-xl object-cover border border-slate-200"
                           />
                         ) : (
-                          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-[#0F2B5B] to-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center">
+                          <div className="h-9 w-9 rounded-xl bg-[#1E4ED8] text-white font-bold text-xs flex items-center justify-center">
                             {agent.name?.slice(0, 2).toUpperCase()}
                           </div>
                         )}

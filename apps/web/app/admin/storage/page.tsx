@@ -52,6 +52,7 @@ export default function AdminStoragePage() {
   const [isPruneModalOpen, setIsPruneModalOpen] = useState(false);
   const [pruneDryRun, setPruneDryRun] = useState(true);
   const [pruneAuditLogs, setPruneAuditLogs] = useState(true);
+  const [pruneAuditLogsMode, setPruneAuditLogsMode] = useState<"all" | "retention">("all");
   const [pruneAttachments, setPruneAttachments] = useState(true);
   const [pruneOrphans, setPruneOrphans] = useState(true);
   const [pruneResult, setPruneResult] = useState<PruneStorageResult | null>(null);
@@ -119,6 +120,10 @@ export default function AdminStoragePage() {
         prune_audit_logs: pruneAuditLogs,
         prune_attachments: pruneAttachments,
         clean_orphans: pruneOrphans,
+        retention_audit_logs_days: pruneAuditLogs
+          ? (pruneAuditLogsMode === "all" ? 0 : Number(auditLogsDays))
+          : undefined,
+        retention_attachments_days: pruneAttachments ? Number(attachmentsDays) : undefined,
       });
 
       setPruneResult(res.data);
@@ -412,10 +417,11 @@ export default function AdminStoragePage() {
                   max="3650"
                   value={auditLogsDays}
                   onChange={(e) => setAuditLogsDays(Number(e.target.value))}
-                  className="max-w-[140px] min-h-[44px] font-semibold text-slate-900"
+                  wrapperClassName="w-28 sm:w-32 shrink-0"
+                  className="min-h-[44px] font-semibold text-slate-900"
                   required
                 />
-                <span className="text-xs sm:text-sm text-slate-500 font-medium">
+                <span className="text-xs sm:text-sm text-slate-600 font-medium">
                   hari (minimal 7 hari, rekomendasi: 90 hari)
                 </span>
               </div>
@@ -436,15 +442,16 @@ export default function AdminStoragePage() {
                   max="3650"
                   value={attachmentsDays}
                   onChange={(e) => setAttachmentsDays(Number(e.target.value))}
-                  className="max-w-[140px] min-h-[44px] font-semibold text-slate-900"
+                  wrapperClassName="w-28 sm:w-32 shrink-0"
+                  className="min-h-[44px] font-semibold text-slate-900"
                   required
                 />
-                <span className="text-xs sm:text-sm text-slate-500 font-medium">
+                <span className="text-xs sm:text-sm text-slate-600 font-medium">
                   hari (0 = jangan hapus lampiran, rekomendasi: 60 hari)
                 </span>
               </div>
               <p className="text-xs text-slate-500">
-                File fisik lampiran (foto & video) dari sesi percakapan yang telah <strong>ditutup</strong> lebih lama dari batas ini akan dihapus dari disk VM untuk membebaskan ruang. Teks percakapan tetap tersimpan.
+                File fisik lampiran (foto &amp; video) dari sesi percakapan yang telah <strong>ditutup</strong> lebih lama dari batas ini akan dihapus dari disk VM untuk membebaskan ruang. Teks percakapan tetap tersimpan.
               </p>
             </div>
 
@@ -593,22 +600,54 @@ export default function AdminStoragePage() {
               Pilihan Komponen yang Dibersihkan
             </span>
 
-            <label className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors min-h-[44px]">
-              <input
-                type="checkbox"
-                checked={pruneAuditLogs}
-                onChange={(e) => setPruneAuditLogs(e.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-slate-300 text-[#1E4ED8] focus:ring-[#1E4ED8]"
-              />
-              <div className="text-xs">
-                <span className="font-semibold text-slate-800 block">
-                  Audit Log Kadaluarsa (&gt; {auditLogsDays} Hari)
-                </span>
-                <span className="text-slate-500">
-                  Membersihkan rekam jejak aktivitas lama dari tabel audit logs.
-                </span>
-              </div>
-            </label>
+            <div className="p-3 rounded-xl border border-slate-200 hover:bg-slate-50/70 transition-colors space-y-2.5">
+              <label className="flex items-start gap-3 cursor-pointer min-h-[44px]">
+                <input
+                  type="checkbox"
+                  checked={pruneAuditLogs}
+                  onChange={(e) => setPruneAuditLogs(e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-[#1E4ED8] focus:ring-[#1E4ED8]"
+                />
+                <div className="text-xs">
+                  <span className="font-semibold text-slate-800 block">
+                    Riwayat Audit Log Sistem
+                  </span>
+                  <span className="text-slate-500">
+                    Membersihkan riwayat jejak aktivitas keamanan dan operasional dari tabel database.
+                  </span>
+                </div>
+              </label>
+
+              {pruneAuditLogs && (
+                <div className="ml-7 pt-1 flex items-center gap-2">
+                  <span className="text-[11px] font-medium text-slate-500">Lingkup:</span>
+                  <div className="inline-flex rounded-lg border border-slate-200 p-0.5 bg-white text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setPruneAuditLogsMode("all")}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
+                        pruneAuditLogsMode === "all"
+                          ? "bg-blue-50 text-[#1E4ED8] font-bold"
+                          : "text-slate-500 hover:text-slate-800"
+                      }`}
+                    >
+                      Hapus Semua Log (0 hari)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPruneAuditLogsMode("retention")}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all ${
+                        pruneAuditLogsMode === "retention"
+                          ? "bg-blue-50 text-[#1E4ED8] font-bold"
+                          : "text-slate-500 hover:text-slate-800"
+                      }`}
+                    >
+                      Hanya Kedaluwarsa (&gt; {auditLogsDays} hari)
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <label className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors min-h-[44px]">
               <input
