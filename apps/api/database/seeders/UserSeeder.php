@@ -126,41 +126,7 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // 5. Seed an active conversation for member1 with agent1
-        $conv1 = Conversation::firstOrCreate(
-            ['member_id' => $member1->id, 'status' => ConversationStatus::ACTIVE],
-            [
-                'agent_id' => $agent1->id,
-                'started_at' => now()->subMinutes(10),
-                'assigned_at' => now()->subMinutes(10),
-                'first_response_at' => now()->subMinutes(9),
-            ]
-        );
-        ConversationAssignment::firstOrCreate(
-            ['conversation_id' => $conv1->id, 'agent_id' => $agent1->id],
-            [
-                'assigned_at' => now()->subMinutes(10),
-                'reason' => AssignmentReason::AUTO_ROUTING,
-            ]
-        );
-        Message::firstOrCreate(
-            ['conversation_id' => $conv1->id, 'content' => 'Halo, koneksi internet saya sedikit lambat hari ini.'],
-            [
-                'sender_id' => $member1->id,
-                'type' => MessageType::TEXT,
-                'created_at' => now()->subMinutes(10),
-            ]
-        );
-        Message::firstOrCreate(
-            ['conversation_id' => $conv1->id, 'content' => 'Halo Kak Budi, mohon maaf atas ketidaknyamanannya. Boleh bantu sebutkan nomor pelanggan Anda?'],
-            [
-                'sender_id' => $agent1->id,
-                'type' => MessageType::TEXT,
-                'created_at' => now()->subMinutes(9),
-            ]
-        );
-
-        // 6. Seed a closed conversation with rating for member1
+        // 5. Seed a closed conversation with rating for member1 (History only, no active queue clutter)
         $convClosed = Conversation::firstOrCreate(
             ['member_id' => $member1->id, 'status' => ConversationStatus::CLOSED],
             [
