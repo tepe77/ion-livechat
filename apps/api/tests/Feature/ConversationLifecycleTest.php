@@ -263,4 +263,38 @@ class ConversationLifecycleTest extends TestCase
             'member_id' => $this->member->id,
         ]);
     }
+
+    public function test_agent_can_view_member_past_conversations_and_transcript(): void
+    {
+        // 1. Create a closed past conversation for this member (handled by another agent or same agent)
+        $pastConv = Conversation::create([
+            'member_id' => $this->member->id,
+            'agent_id' => $this->agent->id,
+            'status' => ConversationStatus::CLOSED->value,
+            'started_at' => now()->subDay(),
+            'closed_at' => now()->subDay(),
+        ]);
+
+        $pastConv->messages()->create([
+            'conversation_id' => $pastConv->id,
+            'sender_id' => $this->member->id,
+            'content' => 'Kemarin router saya lampu LOS merah',
+            'type' => 'text',
+        ]);
+
+        // 2. Agent fetches member's past conversations
+        $res = $this->actingAs($this->agent)
+            ->getJson("/api/v1/agent/members/{$this->member->id}/conversations");
+
+        $res->assertStatus(200)
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $pastConv->id);
+
+        // 3. Agent views transcript messages of that past conversation
+        $msgRes = $this->actingAs($this->agent)
+            ->getJson("/api/v1/conversations/{$pastConv->id}/messages");
+
+        $msgRes->assertStatus(200)
+            ->assertJsonPath('data.0.content', 'Kemarin router saya lampu LOS merah');
+    }
 }

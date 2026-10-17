@@ -2,16 +2,23 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import type { AgentAvailability, AgentStatus, Conversation, Message, User } from "@ion/types";
-import { getAgentConversations, getAgentStatus, sendHeartbeat, updateAgentStatus } from "../../lib/api/agents";
+import {
+  getAgentConversations,
+  getAgentStatus,
+  sendHeartbeat,
+  updateAgentStatus,
+  getMemberPastConversations,
+} from "../../lib/api/agents";
 import { getMessages, markMessageRead, sendMessage } from "../../lib/api/messages";
 import { closeConversation } from "../../lib/api/conversations";
 import { getEcho } from "../../lib/realtime/client";
-import { formatTime, cn, getAttachmentUrl } from "../../lib/utils";
+import { formatTime, formatDate, cn, getAttachmentUrl } from "../../lib/utils";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { RealtimeIndicator } from "../ui/RealtimeIndicator";
 import { TransferModal } from "./TransferModal";
 import { AgentProfileDropdown } from "./AgentProfileDropdown";
+import { ConversationTranscriptModal } from "../ui/ConversationTranscriptModal";
 
 import { compressImage } from "../../lib/imageCompression";
 import {
@@ -32,6 +39,8 @@ import {
   Video,
   Loader2,
   X,
+  History,
+  Star,
 } from "lucide-react";
 import { useAuthStore } from "../../stores/authStore";
 
@@ -41,6 +50,10 @@ export function AgentWorkspace() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [memberPastConvs, setMemberPastConvs] = useState<Conversation[]>([]);
+  const [isLoadingMemberPast, setIsLoadingMemberPast] = useState<boolean>(false);
+  const [showMemberHistory, setShowMemberHistory] = useState<boolean>(false);
+  const [selectedTranscriptConv, setSelectedTranscriptConv] = useState<Conversation | null>(null);
   const [inputContent, setInputContent] = useState<string>("");
   const [isSending, setIsSending] = useState<boolean>(false);
   const [isMemberTyping, setIsMemberTyping] = useState<boolean>(false);
@@ -208,6 +221,22 @@ export function AgentWorkspace() {
       return next;
     });
   };
+
+  useEffect(() => {
+    if (selectedConversation?.member_id) {
+      setIsLoadingMemberPast(true);
+      getMemberPastConversations(selectedConversation.member_id)
+        .then((data) => setMemberPastConvs(data || []))
+        .catch((err) => {
+          console.error("Gagal memuat riwayat percakapan pelanggan:", err);
+          setMemberPastConvs([]);
+        })
+        .finally(() => setIsLoadingMemberPast(false));
+    } else {
+      setMemberPastConvs([]);
+      setShowMemberHistory(false);
+    }
+  }, [selectedConversation?.id, selectedConversation?.member_id]);
 
   useEffect(() => {
     refreshInbox();
@@ -686,6 +715,27 @@ export function AgentWorkspace() {
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={() => setShowMemberHistory((prev) => !prev)}
+                  className={cn(
+                    "text-xs px-2.5 sm:px-3 h-8 sm:h-9 transition-colors",
+                    showMemberHistory
+                      ? "bg-blue-50 text-[#023E8A] border-[#023E8A]"
+                      : "text-slate-700"
+                  )}
+                  title="Lihat Riwayat Tiket Pelanggan"
+                >
+                  <History className="h-3.5 w-3.5 sm:mr-1.5 text-slate-500" />
+                  <span className="hidden sm:inline">Riwayat</span>
+                  {memberPastConvs.length > 0 && (
+                    <span className="ml-1 px-1.5 py-0.2 rounded-full bg-slate-200/80 text-slate-700 text-[10px] font-bold">
+                      {memberPastConvs.length}
+                    </span>
+                  )}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setShowTransferModal(true)}
                   className="text-xs text-slate-700 px-2.5 sm:px-3 h-8 sm:h-9"
                   title="Transfer Chat"
@@ -708,7 +758,10 @@ export function AgentWorkspace() {
               </div>
             </header>
 
-            {/* Messages Area */}
+            {/* Chat Body & Optional Right Sidebar Drawer for Past Customer History */}
+            <div className="flex-1 flex overflow-hidden">
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Messages Area */}
             <div className="flex-1 p-3 sm:p-6 chat-scroll-container space-y-3">
               {messages.map((msg) => {
                 const isMe = msg.sender_id === user?.id;
@@ -987,32 +1040,134 @@ export function AgentWorkspace() {
                 </Button>
               </form>
             </footer>
-
-            {/* Transfer Modal */}
-            <TransferModal
-              isOpen={showTransferModal}
-              conversationId={selectedConversation.id}
-              currentAgentId={user?.id || 0}
-              onTransferred={() => {
-                setShowTransferModal(false);
-                setSelectedConversation(null);
-                refreshInbox();
-              }}
-              onClose={() => setShowTransferModal(false)}
-            />
-          </>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <div className="h-16 w-16 rounded-full bg-[#1E4ED8]/10 text-[#1E4ED8] flex items-center justify-center mb-4">
-              <Headphones className="h-8 w-8" />
-            </div>
-            <h3 className="text-base font-semibold text-slate-800">Workspace CS ION Broadband Livechat</h3>
-            <p className="text-xs text-slate-500 mt-1 max-w-sm">
-              Pilih salah satu percakapan di bilah samping untuk mulai melayani pelanggan secara realtime.
-            </p>
           </div>
-        )}
-      </main>
-    </div>
-  );
+
+          {/* Collapsible Customer Past History Drawer */}
+          {showMemberHistory && (
+            <aside className="w-72 sm:w-80 border-l border-slate-200 bg-white flex flex-col shrink-0 h-full animate-in slide-in-from-right duration-150 z-20">
+              <div className="p-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
+                <div className="flex items-center gap-2">
+                  <History className="h-4 w-4 text-[#023E8A]" />
+                  <h4 className="text-xs font-bold text-slate-900">Riwayat Tiket Pelanggan</h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowMemberHistory(false)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 cursor-pointer"
+                  title="Tutup Panel Riwayat"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Customer summary mini-card */}
+              <div className="p-3 bg-blue-50/50 border-b border-blue-100 text-xs space-y-1">
+                <div className="font-semibold text-slate-900">
+                  {selectedConversation.member?.name || `Customer #${selectedConversation.member_id}`}
+                </div>
+                <div className="text-[11px] text-slate-500">{selectedConversation.member?.email}</div>
+                {selectedConversation.member?.customer_number && (
+                  <div className="text-[10px] font-mono font-bold text-[#023E8A]">
+                    ID Pelanggan: {selectedConversation.member?.customer_number}
+                  </div>
+                )}
+              </div>
+
+              {/* Past conversations list */}
+              <div className="flex-1 overflow-y-auto p-3 space-y-2">
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Sesi Lampau ({memberPastConvs.length})
+                </div>
+
+                {isLoadingMemberPast ? (
+                  <div className="py-8 text-center text-slate-400 space-y-2">
+                    <Loader2 className="h-5 w-5 animate-spin mx-auto text-[#023E8A]" />
+                    <p className="text-[11px]">Memuat riwayat...</p>
+                  </div>
+                ) : memberPastConvs.length === 0 ? (
+                  <div className="py-8 text-center text-slate-400 space-y-1 bg-slate-50 rounded-xl border border-dashed border-slate-200 p-3">
+                    <p className="text-xs font-semibold text-slate-600">Pelanggan Baru</p>
+                    <p className="text-[11px] text-slate-400">
+                      Belum ada riwayat percakapan lampau untuk pelanggan ini.
+                    </p>
+                  </div>
+                ) : (
+                  memberPastConvs.map((pastConv) => (
+                    <div
+                      key={pastConv.id}
+                      className="p-2.5 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50/70 transition-all space-y-1.5 text-xs"
+                    >
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="font-mono text-[10px] font-bold text-slate-500">
+                          #{pastConv.id}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          {pastConv.rating && (
+                            <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                              <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-500" />
+                              {pastConv.rating.rating}/5
+                            </span>
+                          )}
+                          <span className="text-[10px] text-slate-400">
+                            {formatDate(pastConv.closed_at || pastConv.created_at)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="text-[11px] text-slate-600 line-clamp-2">
+                        {pastConv.latest_message?.content || "Sesi percakapan telah diselesaikan."}
+                      </p>
+
+                      <div className="pt-1 flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-100">
+                        <span>CS: {pastConv.agent?.name || "Petugas CS"}</span>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedTranscriptConv(pastConv)}
+                          className="text-[#023E8A] hover:underline font-semibold cursor-pointer"
+                        >
+                          Lihat Transkrip →
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </aside>
+          )}
+        </div>
+
+        {/* Transfer Modal */}
+        <TransferModal
+          isOpen={showTransferModal}
+          conversationId={selectedConversation.id}
+          currentAgentId={user?.id || 0}
+          onTransferred={() => {
+            setShowTransferModal(false);
+            setSelectedConversation(null);
+            refreshInbox();
+          }}
+          onClose={() => setShowTransferModal(false)}
+        />
+      </>
+    ) : (
+      <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
+        <div className="h-16 w-16 rounded-full bg-[#1E4ED8]/10 text-[#1E4ED8] flex items-center justify-center mb-4">
+          <Headphones className="h-8 w-8" />
+        </div>
+        <h3 className="text-base font-semibold text-slate-800">Workspace CS ION Broadband Livechat</h3>
+        <p className="text-xs text-slate-500 mt-1 max-w-sm">
+          Pilih salah satu percakapan di bilah samping untuk mulai melayani pelanggan secara realtime.
+        </p>
+      </div>
+    )}
+  </main>
+
+  {/* Transcript Detail Modal */}
+  <ConversationTranscriptModal
+    isOpen={!!selectedTranscriptConv}
+    onClose={() => setSelectedTranscriptConv(null)}
+    conversation={selectedTranscriptConv}
+  />
+</div>
+);
 }

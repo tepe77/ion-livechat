@@ -24,3 +24,8 @@ export async function sendHeartbeat(): Promise<AgentStatus> {
   });
   return res.data;
 }
+
+export async function getMemberPastConversations(memberId: number): Promise<Conversation[]> {
+  const res = await apiClient<ApiResponse<Conversation[]>>(`/agent/members/${memberId}/conversations`);
+  return res.data;
+}

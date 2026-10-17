@@ -18,7 +18,12 @@ class ConversationPolicy
         }
 
         if ($user->isAgent()) {
-            return $conversation->agent_id === $user->id;
+            return $conversation->agent_id === $user->id
+                || $conversation->isClosed()
+                || Conversation::where('member_id', $conversation->member_id)
+                    ->where('agent_id', $user->id)
+                    ->whereIn('status', ['assigned', 'active'])
+                    ->exists();
         }
 
         return false;

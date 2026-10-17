@@ -4,9 +4,11 @@ import React, { useEffect, useState } from "react";
 import type { Conversation } from "@ion/types";
 import { getMonitoredConversations } from "../../lib/api/manager";
 import { Badge } from "../ui/Badge";
+import { Button } from "../ui/Button";
 import { Pagination } from "../ui/Pagination";
+import { ConversationTranscriptModal } from "../ui/ConversationTranscriptModal";
 import { formatDate, formatTime } from "../../lib/utils";
-import { Filter, Star, Clock } from "lucide-react";
+import { Filter, Star, Clock, FileText } from "lucide-react";
 
 export function ConversationMonitor() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -16,6 +18,7 @@ export function ConversationMonitor() {
   const [totalConversations, setTotalConversations] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [selectedTranscriptConv, setSelectedTranscriptConv] = useState<Conversation | null>(null);
 
   const fetchConversations = (targetPage = page, targetPerPage = perPage) => {
     setIsLoading(true);
@@ -74,18 +77,19 @@ export function ConversationMonitor() {
                 <th className="px-4 py-3">Pesan Terakhir</th>
                 <th className="px-4 py-3">Rating</th>
                 <th className="px-4 py-3">Waktu Mulai</th>
+                <th className="px-4 py-3 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-slate-400">
+                  <td colSpan={8} className="text-center py-8 text-slate-400">
                     Memuat daftar percakapan...
                   </td>
                 </tr>
               ) : conversations.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-slate-400">
+                  <td colSpan={8} className="text-center py-8 text-slate-400">
                     Tidak ada percakapan ditemukan.
                   </td>
                 </tr>
@@ -133,6 +137,16 @@ export function ConversationMonitor() {
                         <span>{formatDate(conv.started_at)}, {formatTime(conv.started_at)}</span>
                       </div>
                     </td>
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSelectedTranscriptConv(conv)}
+                        className="text-xs h-7 px-2.5 text-[#023E8A] hover:bg-blue-50 border-blue-200 font-medium rounded-lg"
+                      >
+                        Lihat Transkrip
+                      </Button>
+                    </td>
                   </tr>
                 ))
               )}
@@ -159,6 +173,13 @@ export function ConversationMonitor() {
           perPageOptions={[10, 20, 50]}
         />
       </div>
+
+      {/* Transcript Detail Modal */}
+      <ConversationTranscriptModal
+        isOpen={!!selectedTranscriptConv}
+        onClose={() => setSelectedTranscriptConv(null)}
+        conversation={selectedTranscriptConv}
+      />
     </div>
   );
 }

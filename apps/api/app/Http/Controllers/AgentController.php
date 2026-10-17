@@ -77,4 +77,18 @@ class AgentController extends Controller
             'message' => 'Heartbeat recorded.',
         ]);
     }
+
+    public function memberConversations(Request $request, int $memberId): JsonResponse
+    {
+        $conversations = Conversation::where('member_id', $memberId)
+            ->where('status', 'closed')
+            ->with(['agent', 'latestMessage', 'rating'])
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        return response()->json([
+            'data' => ConversationResource::collection($conversations)->resolve(),
+        ]);
+    }
 }

@@ -62,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Agent Workspace
     Route::prefix('agent')->group(function () {
         Route::get('/conversations', [AgentController::class, 'conversations']);
+        Route::get('/members/{memberId}/conversations', [AgentController::class, 'memberConversations']);
         Route::get('/status', [AgentController::class, 'getStatus']);
         Route::patch('/status', [AgentController::class, 'updateStatus']);
         Route::post('/heartbeat', [AgentController::class, 'heartbeat']);
